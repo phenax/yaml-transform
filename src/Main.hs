@@ -1,4 +1,6 @@
 module Main where
 
+import YamlTransform.Parser (parse)
+
 main :: IO ()
-main = putStrLn "Hello, Haskell!"
+main = print $ parse "Hello, Haskell!"

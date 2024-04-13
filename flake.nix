@@ -15,25 +15,15 @@
             root = ./.;
             fileset = lib.fileset.unions [
               ./src
+              ./specs
               ./yaml-transform.cabal
               # ./LICENSE
               # ./README.md
             ];
           });
 
-          packages = {
-            # aeson.source = "1.5.0.0"; # Hackage version override
-            # shower.source = inputs.shower;
-          };
-          settings = {
-            #  aeson = {
-            #    check = false;
-            #  };
-            #  relude = {
-            #    haddock = false;
-            #    broken = false;
-            #  };
-          };
+          packages = {};
+          settings = {};
 
           devShell = {
             # tools = hp: { fourmolu = hp.fourmolu; ghcid = null; };

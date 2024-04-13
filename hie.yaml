@@ -1,0 +1,10 @@
+cradle:
+  cabal:
+    - path: "./src"
+      component: "lib:lib-yaml-transform"
+
+    - path: "./src/Main.hs"
+      component: "yaml-transform:exe:yaml-transform"
+
+    - path: "./specs"
+      component: "test:specs-yt"
