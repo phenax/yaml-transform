@@ -123,12 +123,12 @@ Right
                         ]
                     , YMLNewLine
                     , YMLNewLine
-                    , YMLComment " Orchestrate our job run sequence"
-                    , YMLNewLine
                     ]
                 ]
             ]
         ]
+    , YMLComment " Orchestrate our job run sequence"
+    , YMLNewLine
     , YMLMapping "workflows"
         [ YMLNewLine
         , YMLWSSpace

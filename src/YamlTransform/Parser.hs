@@ -102,13 +102,21 @@ commentP = do
   P.char '#' >> P.lookAhead whitespaceP
   YMLComment <$> P.takeWhile1 (not . P.isEndOfLine)
 
+fullCommentP :: Int -> P.Parser [Yaml]
+fullCommentP parentIndent = do
+  whitespaces <- P.many' whitespaceP
+  let indent = length whitespaces
+  when (indent <= parentIndent) $ fail "Invalid indent level"
+  comment <- commentP
+  pure $ whitespaces ++ [comment]
+
 yamlP :: Int -> Int -> P.Parser [Yaml]
 yamlP parentIndent prefixIndent = join <$> P.many1 yamlPart
   where
     yamlPart =
       P.choice
         [ P.many1 newlineP,
-          P.many1 commentP,
+          fullCommentP parentIndent,
           sequenceP parentIndent,
           mappingP parentIndent prefixIndent
         ]

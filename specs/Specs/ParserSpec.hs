@@ -227,6 +227,94 @@ test = do
                   ]
               ]
 
+      context "when comments are above mappings" $ do
+        it "includes # in comment" $ do
+          let input =
+                [text|
+                # This is a comment
+                a: 1
+                # This is another a comment
+                b: 2
+                |]
+          parse input
+            `shouldBe` Right
+              [ YMLComment " This is a comment",
+                YMLNewLine,
+                YMLMapping "a" [YMLWSSpace, YMLScalar "1"],
+                YMLNewLine,
+                YMLComment " This is another a comment",
+                YMLNewLine,
+                YMLMapping "b" [YMLWSSpace, YMLScalar "2"]
+              ]
+
+      context "when comments are between nested mappings" $ do
+        it "creates a comment on the appropriate mapping" $ do
+          let input =
+                [text|
+                a:
+                  b: 1
+                  # This is another a comment
+                  c: 2
+                |]
+          parse input
+            `shouldBe` Right
+              [ YMLMapping
+                  "a"
+                  [ YMLNewLine,
+                    YMLWSSpace,
+                    YMLWSSpace,
+                    YMLMapping "b" [YMLWSSpace, YMLScalar "1"],
+                    YMLNewLine,
+                    YMLWSSpace,
+                    YMLWSSpace,
+                    YMLComment " This is another a comment",
+                    YMLNewLine,
+                    YMLWSSpace,
+                    YMLWSSpace,
+                    YMLMapping "c" [YMLWSSpace, YMLScalar "2"]
+                  ]
+              ]
+
+      context "when comments are between nested mappings" $ do
+        it "creates a comment on the appropriate mapping" $ do
+          let input =
+                [text|
+                a:
+                  b:
+                    c: 2
+                  # This is another a comment
+                  d: 5
+                c: 2
+                |]
+          parse input
+            `shouldBe` Right
+              [ YMLMapping
+                  "a"
+                  [ YMLNewLine,
+                    YMLWSSpace,
+                    YMLWSSpace,
+                    YMLMapping
+                      "b"
+                      [ YMLNewLine,
+                        YMLWSSpace,
+                        YMLWSSpace,
+                        YMLWSSpace,
+                        YMLWSSpace,
+                        YMLMapping "c" [YMLWSSpace, YMLScalar "2"],
+                        YMLNewLine
+                      ],
+                    YMLWSSpace,
+                    YMLWSSpace,
+                    YMLComment " This is another a comment",
+                    YMLNewLine,
+                    YMLWSSpace,
+                    YMLWSSpace,
+                    YMLMapping "d" [YMLWSSpace, YMLScalar "5"],
+                    YMLNewLine
+                  ],
+                YMLMapping "c" [YMLWSSpace, YMLScalar "2"]
+              ]
+
     describe "with sequences" $ do
       context "when there is a sequence at root" $ do
         it "creates a sequence of scalars at root" $ do
