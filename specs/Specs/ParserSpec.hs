@@ -5,6 +5,8 @@ import qualified Data.Text.Lazy as LazyText
 import qualified Debug.Trace as Debug
 import NeatInterpolation (text)
 import Test.Hspec
+import Test.Hspec.Golden (defaultGolden)
+import Text.Pretty.Simple (pShowNoColor)
 import YamlTransform.Parser (Yaml (..), parse)
 
 test :: SpecWith ()
@@ -298,3 +300,16 @@ test = do
                   ],
                 YMLMapping "foo" [YMLWSSpace, YMLScalar "bar"]
               ]
+
+    describe "fixture tests" $ do
+      let withFixture :: (Show a) => String -> (Text.Text -> IO a) -> Spec
+          withFixture fixture fn = do
+            let path = "fixtures/" ++ fixture
+            input <- Text.pack <$> runIO (readFile $ "specs/" ++ path)
+            val <- runIO $ fn input
+            it path $ do
+              defaultGolden path . LazyText.unpack . pShowNoColor $ val
+
+      withFixture "basic-spaces.yml" (pure . parse)
+
+      withFixture "basic-tabs.yml" (pure . parse)

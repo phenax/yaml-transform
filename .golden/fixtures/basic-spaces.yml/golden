@@ -1,0 +1,169 @@
+Right
+    [ YMLMapping "version"
+        [ YMLWSSpace
+        , YMLScalar "2.1"
+        ]
+    , YMLNewLine
+    , YMLNewLine
+    , YMLComment " Define the jobs we want to run for this project"
+    , YMLNewLine
+    , YMLMapping "jobs"
+        [ YMLNewLine
+        , YMLWSSpace
+        , YMLWSSpace
+        , YMLMapping "build"
+            [ YMLNewLine
+            , YMLWSSpace
+            , YMLWSSpace
+            , YMLWSSpace
+            , YMLWSSpace
+            , YMLMapping "docker"
+                [ YMLNewLine
+                , YMLWSSpace
+                , YMLWSSpace
+                , YMLWSSpace
+                , YMLWSSpace
+                , YMLWSSpace
+                , YMLWSSpace
+                , YMLSequenceItem
+                    [ YMLWSSpace
+                    , YMLMapping "image"
+                        [ YMLWSSpace
+                        , YMLScalar "cimg/base:2023.03"
+                        ]
+                    , YMLNewLine
+                    ]
+                ]
+            , YMLWSSpace
+            , YMLWSSpace
+            , YMLWSSpace
+            , YMLWSSpace
+            , YMLMapping "steps"
+                [ YMLNewLine
+                , YMLWSSpace
+                , YMLWSSpace
+                , YMLWSSpace
+                , YMLWSSpace
+                , YMLWSSpace
+                , YMLWSSpace
+                , YMLSequenceItem
+                    [ YMLWSSpace
+                    , YMLScalar "checkout"
+                    ]
+                , YMLNewLine
+                , YMLWSSpace
+                , YMLWSSpace
+                , YMLWSSpace
+                , YMLWSSpace
+                , YMLWSSpace
+                , YMLWSSpace
+                , YMLSequenceItem
+                    [ YMLWSSpace
+                    , YMLMapping "run"
+                        [ YMLWSSpace
+                        , YMLScalar "echo "this is the build job""
+                        ]
+                    , YMLNewLine
+                    ]
+                ]
+            ]
+        , YMLWSSpace
+        , YMLWSSpace
+        , YMLMapping "test"
+            [ YMLNewLine
+            , YMLWSSpace
+            , YMLWSSpace
+            , YMLWSSpace
+            , YMLWSSpace
+            , YMLMapping "docker"
+                [ YMLNewLine
+                , YMLWSSpace
+                , YMLWSSpace
+                , YMLWSSpace
+                , YMLWSSpace
+                , YMLWSSpace
+                , YMLWSSpace
+                , YMLSequenceItem
+                    [ YMLWSSpace
+                    , YMLMapping "image"
+                        [ YMLWSSpace
+                        , YMLScalar "cimg/base:2023.03"
+                        ]
+                    , YMLNewLine
+                    ]
+                ]
+            , YMLWSSpace
+            , YMLWSSpace
+            , YMLWSSpace
+            , YMLWSSpace
+            , YMLMapping "steps"
+                [ YMLNewLine
+                , YMLWSSpace
+                , YMLWSSpace
+                , YMLWSSpace
+                , YMLWSSpace
+                , YMLWSSpace
+                , YMLWSSpace
+                , YMLSequenceItem
+                    [ YMLWSSpace
+                    , YMLScalar "checkout"
+                    ]
+                , YMLNewLine
+                , YMLWSSpace
+                , YMLWSSpace
+                , YMLWSSpace
+                , YMLWSSpace
+                , YMLWSSpace
+                , YMLWSSpace
+                , YMLSequenceItem
+                    [ YMLWSSpace
+                    , YMLMapping "run"
+                        [ YMLWSSpace
+                        , YMLScalar "echo "this is the test job""
+                        ]
+                    , YMLNewLine
+                    , YMLNewLine
+                    , YMLComment " Orchestrate our job run sequence"
+                    , YMLNewLine
+                    ]
+                ]
+            ]
+        ]
+    , YMLMapping "workflows"
+        [ YMLNewLine
+        , YMLWSSpace
+        , YMLWSSpace
+        , YMLMapping "build_and_test"
+            [ YMLNewLine
+            , YMLWSSpace
+            , YMLWSSpace
+            , YMLWSSpace
+            , YMLWSSpace
+            , YMLMapping "jobs"
+                [ YMLNewLine
+                , YMLWSSpace
+                , YMLWSSpace
+                , YMLWSSpace
+                , YMLWSSpace
+                , YMLWSSpace
+                , YMLWSSpace
+                , YMLSequenceItem
+                    [ YMLWSSpace
+                    , YMLScalar "build"
+                    ]
+                , YMLNewLine
+                , YMLWSSpace
+                , YMLWSSpace
+                , YMLWSSpace
+                , YMLWSSpace
+                , YMLWSSpace
+                , YMLWSSpace
+                , YMLSequenceItem
+                    [ YMLWSSpace
+                    , YMLScalar "test"
+                    ]
+                , YMLNewLine
+                ]
+            ]
+        ]
+    ]

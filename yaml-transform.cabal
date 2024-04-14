@@ -52,4 +52,6 @@ test-suite specs
   build-depends:
     lib-yaml-transform,
     neat-interpolation,
+    pretty-simple,
+    hspec-golden,
     hspec
