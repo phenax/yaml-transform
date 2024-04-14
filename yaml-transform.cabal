@@ -34,13 +34,17 @@ executable yaml-transform
   main-is: Main.hs
   build-depends: lib-yaml-transform
   other-modules:
-    YamlTransform.Parser
+    YamlTransform.Parser,
+    YamlTransform.Types,
+    YamlTransform.Serializer
 
 library lib-yaml-transform
   import: common-config, warnings
   hs-source-dirs: src
   exposed-modules:
-    YamlTransform.Parser
+    YamlTransform.Parser,
+    YamlTransform.Types,
+    YamlTransform.Serializer
 
 test-suite specs
   import: common-config
@@ -48,7 +52,8 @@ test-suite specs
   hs-source-dirs: specs
   main-is: Main.hs
   other-modules:
-    Specs.ParserSpec
+    Specs.ParserSpec,
+    Specs.SerializerSpec
   build-depends:
     lib-yaml-transform,
     neat-interpolation,

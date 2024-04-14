@@ -8,17 +8,7 @@ import Data.Maybe (fromMaybe, maybeToList)
 import Data.Text (Text, cons)
 import qualified Data.Text as Text
 import qualified Debug.Trace as Debug
-
-data Yaml
-  = YMLMapping Text [Yaml]
-  | YMLSequenceItem [Yaml]
-  | YMLScalar Text -- TODO: Add scalar type
-  | YMLAlias Text
-  | YMLComment Text
-  | YMLWSSpace
-  | YMLWSTab
-  | YMLNewLine
-  deriving (Show, Eq)
+import YamlTransform.Types (Yaml (..))
 
 debugNextChar :: P.Parser ()
 debugNextChar =

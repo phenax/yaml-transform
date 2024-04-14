@@ -390,14 +390,15 @@ test = do
               ]
 
     describe "fixture tests" $ do
-      let withFixture :: (Show a) => String -> (Text.Text -> IO a) -> Spec
-          withFixture fixture fn = do
+      let goldenFixtureTest prefix fixture fn = do
             let path = "fixtures/" ++ fixture
             input <- Text.pack <$> runIO (readFile $ "specs/" ++ path)
             val <- runIO $ fn input
             it path $ do
-              defaultGolden path . LazyText.unpack . pShowNoColor $ val
+              defaultGolden (prefix ++ "-" ++ path) . LazyText.unpack . pShowNoColor $ val
 
-      withFixture "basic-spaces.yml" (pure . parse)
+      let prefix = "Parser"
 
-      withFixture "basic-tabs.yml" (pure . parse)
+      goldenFixtureTest prefix "basic-spaces.yml" (pure . parse)
+
+      goldenFixtureTest prefix "basic-tabs.yml" (pure . parse)
