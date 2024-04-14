@@ -9,6 +9,7 @@ testw:
 
 testg:
   hgold -u .golden
+  @just test
 
 build:
   nix build

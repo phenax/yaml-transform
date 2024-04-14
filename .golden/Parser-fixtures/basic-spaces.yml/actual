@@ -5,13 +5,13 @@ Right
         ]
     , YMLNewLine
     , YMLNewLine
-    , YMLComment " Define the jobs we want to run for this project"
-    , YMLNewLine
-    , YMLMapping "jobs"
-        [ YMLNewLine
+    , YMLMapping "executors"
+        [ YMLWSSpace
+        , YMLComment " Define an executor"
+        , YMLNewLine
         , YMLWSSpace
         , YMLWSSpace
-        , YMLMapping "build"
+        , YMLMapping "my-executor"
             [ YMLNewLine
             , YMLWSSpace
             , YMLWSSpace
@@ -29,11 +29,30 @@ Right
                     [ YMLWSSpace
                     , YMLMapping "image"
                         [ YMLWSSpace
-                        , YMLScalar "cimg/base:2023.03"
+                        , YMLScalar "cimg/base:2024.01"
                         ]
                     , YMLNewLine
                     ]
                 ]
+            ]
+        ]
+    , YMLComment " Define the jobs we want to run for this project"
+    , YMLNewLine
+    , YMLMapping "jobs"
+        [ YMLNewLine
+        , YMLWSSpace
+        , YMLWSSpace
+        , YMLMapping "build"
+            [ YMLNewLine
+            , YMLWSSpace
+            , YMLWSSpace
+            , YMLWSSpace
+            , YMLWSSpace
+            , YMLMapping "executor"
+                [ YMLWSSpace
+                , YMLScalar "my-executor"
+                ]
+            , YMLNewLine
             , YMLWSSpace
             , YMLWSSpace
             , YMLWSSpace
@@ -61,7 +80,7 @@ Right
                     [ YMLWSSpace
                     , YMLMapping "run"
                         [ YMLWSSpace
-                        , YMLScalar "echo "this is the build job""
+                        , YMLScalar "echo "build""
                         ]
                     , YMLNewLine
                     ]
@@ -75,7 +94,16 @@ Right
             , YMLWSSpace
             , YMLWSSpace
             , YMLWSSpace
-            , YMLMapping "docker"
+            , YMLMapping "executor"
+                [ YMLWSSpace
+                , YMLScalar "my-executor"
+                ]
+            , YMLNewLine
+            , YMLWSSpace
+            , YMLWSSpace
+            , YMLWSSpace
+            , YMLWSSpace
+            , YMLMapping "steps"
                 [ YMLNewLine
                 , YMLWSSpace
                 , YMLWSSpace
@@ -85,13 +113,42 @@ Right
                 , YMLWSSpace
                 , YMLSequenceItem
                     [ YMLWSSpace
-                    , YMLMapping "image"
-                        [ YMLWSSpace
-                        , YMLScalar "cimg/base:2023.03"
-                        ]
+                    , YMLScalar "checkout"
+                    , YMLWSSpace
+                    , YMLComment " idontlikey"
                     , YMLNewLine
                     ]
+                , YMLWSSpace
+                , YMLWSSpace
+                , YMLWSSpace
+                , YMLWSSpace
+                , YMLWSSpace
+                , YMLWSSpace
+                , YMLSequenceItem
+                    [ YMLWSSpace
+                    , YMLMapping "run"
+                        [ YMLWSSpace
+                        , YMLScalar "echo "test""
+                        , YMLWSSpace
+                        , YMLComment " I like this key"
+                        , YMLNewLine
+                        ]
+                    ]
                 ]
+            ]
+        , YMLWSSpace
+        , YMLWSSpace
+        , YMLMapping "deploy"
+            [ YMLNewLine
+            , YMLWSSpace
+            , YMLWSSpace
+            , YMLWSSpace
+            , YMLWSSpace
+            , YMLMapping "executor"
+                [ YMLWSSpace
+                , YMLScalar "my-executor"
+                ]
+            , YMLNewLine
             , YMLWSSpace
             , YMLWSSpace
             , YMLWSSpace
@@ -115,15 +172,31 @@ Right
                 , YMLWSSpace
                 , YMLWSSpace
                 , YMLWSSpace
+                , YMLComment " Do the stuff"
+                , YMLNewLine
+                , YMLWSSpace
+                , YMLWSSpace
+                , YMLWSSpace
+                , YMLWSSpace
+                , YMLWSSpace
+                , YMLWSSpace
                 , YMLSequenceItem
                     [ YMLWSSpace
                     , YMLMapping "run"
                         [ YMLWSSpace
-                        , YMLScalar "echo "this is the test job""
+                        , YMLScalar "echo "deploy""
                         ]
                     , YMLNewLine
-                    , YMLNewLine
                     ]
+                , YMLWSSpace
+                , YMLWSSpace
+                , YMLWSSpace
+                , YMLWSSpace
+                , YMLWSSpace
+                , YMLWSSpace
+                , YMLComment " A comment about the stuff done"
+                , YMLNewLine
+                , YMLNewLine
                 ]
             ]
         ]
@@ -160,9 +233,139 @@ Right
                 , YMLWSSpace
                 , YMLSequenceItem
                     [ YMLWSSpace
-                    , YMLScalar "test"
+                    , YMLMapping "test"
+                        [ YMLNewLine
+                        , YMLWSSpace
+                        , YMLWSSpace
+                        , YMLWSSpace
+                        , YMLWSSpace
+                        , YMLWSSpace
+                        , YMLWSSpace
+                        , YMLWSSpace
+                        , YMLWSSpace
+                        , YMLWSSpace
+                        , YMLWSSpace
+                        , YMLMapping "requires"
+                            [ YMLNewLine
+                            , YMLWSSpace
+                            , YMLWSSpace
+                            , YMLWSSpace
+                            , YMLWSSpace
+                            , YMLWSSpace
+                            , YMLWSSpace
+                            , YMLWSSpace
+                            , YMLWSSpace
+                            , YMLWSSpace
+                            , YMLWSSpace
+                            , YMLWSSpace
+                            , YMLWSSpace
+                            , YMLSequenceItem
+                                [ YMLWSSpace
+                                , YMLScalar "build"
+                                ]
+                            , YMLNewLine
+                            ]
+                        ]
                     ]
-                , YMLNewLine
+                , YMLWSSpace
+                , YMLWSSpace
+                , YMLWSSpace
+                , YMLWSSpace
+                , YMLWSSpace
+                , YMLWSSpace
+                , YMLSequenceItem
+                    [ YMLWSSpace
+                    , YMLMapping "hold"
+                        [ YMLNewLine
+                        , YMLWSSpace
+                        , YMLWSSpace
+                        , YMLWSSpace
+                        , YMLWSSpace
+                        , YMLWSSpace
+                        , YMLWSSpace
+                        , YMLWSSpace
+                        , YMLWSSpace
+                        , YMLWSSpace
+                        , YMLWSSpace
+                        , YMLMapping "type"
+                            [ YMLWSSpace
+                            , YMLScalar "approval"
+                            ]
+                        , YMLNewLine
+                        , YMLWSSpace
+                        , YMLWSSpace
+                        , YMLWSSpace
+                        , YMLWSSpace
+                        , YMLWSSpace
+                        , YMLWSSpace
+                        , YMLWSSpace
+                        , YMLWSSpace
+                        , YMLWSSpace
+                        , YMLWSSpace
+                        , YMLMapping "requires"
+                            [ YMLNewLine
+                            , YMLWSSpace
+                            , YMLWSSpace
+                            , YMLWSSpace
+                            , YMLWSSpace
+                            , YMLWSSpace
+                            , YMLWSSpace
+                            , YMLWSSpace
+                            , YMLWSSpace
+                            , YMLWSSpace
+                            , YMLWSSpace
+                            , YMLWSSpace
+                            , YMLWSSpace
+                            , YMLSequenceItem
+                                [ YMLWSSpace
+                                , YMLScalar "build"
+                                ]
+                            , YMLNewLine
+                            ]
+                        ]
+                    ]
+                , YMLWSSpace
+                , YMLWSSpace
+                , YMLWSSpace
+                , YMLWSSpace
+                , YMLWSSpace
+                , YMLWSSpace
+                , YMLSequenceItem
+                    [ YMLWSSpace
+                    , YMLMapping "deploy"
+                        [ YMLNewLine
+                        , YMLWSSpace
+                        , YMLWSSpace
+                        , YMLWSSpace
+                        , YMLWSSpace
+                        , YMLWSSpace
+                        , YMLWSSpace
+                        , YMLWSSpace
+                        , YMLWSSpace
+                        , YMLWSSpace
+                        , YMLWSSpace
+                        , YMLMapping "requires"
+                            [ YMLNewLine
+                            , YMLWSSpace
+                            , YMLWSSpace
+                            , YMLWSSpace
+                            , YMLWSSpace
+                            , YMLWSSpace
+                            , YMLWSSpace
+                            , YMLWSSpace
+                            , YMLWSSpace
+                            , YMLWSSpace
+                            , YMLWSSpace
+                            , YMLWSSpace
+                            , YMLWSSpace
+                            , YMLSequenceItem
+                                [ YMLWSSpace
+                                , YMLScalar "hold"
+                                ]
+                            , YMLNewLine
+                            ]
+                        ]
+                    ]
                 ]
             ]
         ]

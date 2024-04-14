@@ -5,12 +5,12 @@ Right
         ]
     , YMLNewLine
     , YMLNewLine
-    , YMLComment " Define the jobs we want to run for this project"
-    , YMLNewLine
-    , YMLMapping "jobs"
-        [ YMLNewLine
+    , YMLMapping "executors"
+        [ YMLWSSpace
+        , YMLComment " Define an executor"
+        , YMLNewLine
         , YMLWSTab
-        , YMLMapping "build"
+        , YMLMapping "my-executor"
             [ YMLNewLine
             , YMLWSTab
             , YMLWSTab
@@ -23,11 +23,27 @@ Right
                     [ YMLWSSpace
                     , YMLMapping "image"
                         [ YMLWSSpace
-                        , YMLScalar "cimg/base:2023.03"
+                        , YMLScalar "cimg/base:2024.01"
                         ]
                     , YMLNewLine
                     ]
                 ]
+            ]
+        ]
+    , YMLComment " Define the jobs we want to run for this project"
+    , YMLNewLine
+    , YMLMapping "jobs"
+        [ YMLNewLine
+        , YMLWSTab
+        , YMLMapping "build"
+            [ YMLNewLine
+            , YMLWSTab
+            , YMLWSTab
+            , YMLMapping "executor"
+                [ YMLWSSpace
+                , YMLScalar "my-executor"
+                ]
+            , YMLNewLine
             , YMLWSTab
             , YMLWSTab
             , YMLMapping "steps"
@@ -47,7 +63,7 @@ Right
                     [ YMLWSSpace
                     , YMLMapping "run"
                         [ YMLWSSpace
-                        , YMLScalar "echo "this is the build job""
+                        , YMLScalar "echo "build""
                         ]
                     , YMLNewLine
                     ]
@@ -58,20 +74,50 @@ Right
             [ YMLNewLine
             , YMLWSTab
             , YMLWSTab
-            , YMLMapping "docker"
+            , YMLMapping "executor"
+                [ YMLWSSpace
+                , YMLScalar "my-executor"
+                ]
+            , YMLNewLine
+            , YMLWSTab
+            , YMLWSTab
+            , YMLMapping "steps"
                 [ YMLNewLine
                 , YMLWSTab
                 , YMLWSTab
                 , YMLWSTab
                 , YMLSequenceItem
                     [ YMLWSSpace
-                    , YMLMapping "image"
-                        [ YMLWSSpace
-                        , YMLScalar "cimg/base:2023.03"
-                        ]
+                    , YMLScalar "checkout"
+                    , YMLWSSpace
+                    , YMLComment " idontlikey"
                     , YMLNewLine
                     ]
+                , YMLWSTab
+                , YMLWSTab
+                , YMLWSTab
+                , YMLSequenceItem
+                    [ YMLWSSpace
+                    , YMLMapping "run"
+                        [ YMLWSSpace
+                        , YMLScalar "echo "test""
+                        , YMLWSSpace
+                        , YMLComment " I like this key"
+                        , YMLNewLine
+                        ]
+                    ]
                 ]
+            ]
+        , YMLWSTab
+        , YMLMapping "deploy"
+            [ YMLNewLine
+            , YMLWSTab
+            , YMLWSTab
+            , YMLMapping "executor"
+                [ YMLWSSpace
+                , YMLScalar "my-executor"
+                ]
+            , YMLNewLine
             , YMLWSTab
             , YMLWSTab
             , YMLMapping "steps"
@@ -87,15 +133,25 @@ Right
                 , YMLWSTab
                 , YMLWSTab
                 , YMLWSTab
+                , YMLComment " Do the stuff"
+                , YMLNewLine
+                , YMLWSTab
+                , YMLWSTab
+                , YMLWSTab
                 , YMLSequenceItem
                     [ YMLWSSpace
                     , YMLMapping "run"
                         [ YMLWSSpace
-                        , YMLScalar "echo "this is the test job""
+                        , YMLScalar "echo "deploy""
                         ]
                     , YMLNewLine
-                    , YMLNewLine
                     ]
+                , YMLWSTab
+                , YMLWSTab
+                , YMLWSTab
+                , YMLComment " A comment about the stuff done"
+                , YMLNewLine
+                , YMLNewLine
                 ]
             ]
         ]
@@ -123,9 +179,95 @@ Right
                 , YMLWSTab
                 , YMLSequenceItem
                     [ YMLWSSpace
-                    , YMLScalar "test"
+                    , YMLMapping "test"
+                        [ YMLNewLine
+                        , YMLWSTab
+                        , YMLWSTab
+                        , YMLWSTab
+                        , YMLWSTab
+                        , YMLWSTab
+                        , YMLMapping "requires"
+                            [ YMLNewLine
+                            , YMLWSTab
+                            , YMLWSTab
+                            , YMLWSTab
+                            , YMLWSTab
+                            , YMLWSTab
+                            , YMLWSTab
+                            , YMLSequenceItem
+                                [ YMLWSSpace
+                                , YMLScalar "build"
+                                ]
+                            , YMLNewLine
+                            ]
+                        ]
                     ]
-                , YMLNewLine
+                , YMLWSTab
+                , YMLWSTab
+                , YMLWSTab
+                , YMLSequenceItem
+                    [ YMLWSSpace
+                    , YMLMapping "hold"
+                        [ YMLNewLine
+                        , YMLWSTab
+                        , YMLWSTab
+                        , YMLWSTab
+                        , YMLWSTab
+                        , YMLWSTab
+                        , YMLMapping "type"
+                            [ YMLWSSpace
+                            , YMLScalar "approval"
+                            ]
+                        , YMLNewLine
+                        , YMLWSTab
+                        , YMLWSTab
+                        , YMLWSTab
+                        , YMLWSTab
+                        , YMLWSTab
+                        , YMLMapping "requires"
+                            [ YMLNewLine
+                            , YMLWSTab
+                            , YMLWSTab
+                            , YMLWSTab
+                            , YMLWSTab
+                            , YMLWSTab
+                            , YMLWSTab
+                            , YMLSequenceItem
+                                [ YMLWSSpace
+                                , YMLScalar "build"
+                                ]
+                            , YMLNewLine
+                            ]
+                        ]
+                    ]
+                , YMLWSTab
+                , YMLWSTab
+                , YMLWSTab
+                , YMLSequenceItem
+                    [ YMLWSSpace
+                    , YMLMapping "deploy"
+                        [ YMLNewLine
+                        , YMLWSTab
+                        , YMLWSTab
+                        , YMLWSTab
+                        , YMLWSTab
+                        , YMLWSTab
+                        , YMLMapping "requires"
+                            [ YMLNewLine
+                            , YMLWSTab
+                            , YMLWSTab
+                            , YMLWSTab
+                            , YMLWSTab
+                            , YMLWSTab
+                            , YMLWSTab
+                            , YMLSequenceItem
+                                [ YMLWSSpace
+                                , YMLScalar "hold"
+                                ]
+                            , YMLNewLine
+                            ]
+                        ]
+                    ]
                 ]
             ]
         ]
