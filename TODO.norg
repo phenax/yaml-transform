@@ -1,0 +1,38 @@
+* Current
+  - ( ) Parser: Anchors and aliases
+  - ( ) Parser: *bug* Allow inline comments without space after `#`
+  - ( ) Parser: TAB IS NOT ALLOWED for indentation
+  - ( ) Transform for scalar
+  - ( ) CLI: Update path in yaml
+  - ( ) CLI: Remove key
+  - ( ) CLI: Get value
+  - ( ) Parser: *bug* Allow sequences to be at the same indentation level as parent
+  - ( ) numbers?
+  - ( ) Unquoted string nuances (Problem chars `[]{}:>|` have to be quoted)
+  - ( ) Inline sequence representation `['a', 'b', 'c']`
+  - ( ) Allow property keys to start on the line after the `-` of a sequence
+  - ( ) strings: single/double quoted
+  - ( ) strings: Folded style `>`
+  - ( ) strings: Literal style `\|`
+  - ( ) Escaping character
+  - ( ) Figure out nuances of keys
+  - ( ) Parser: types for scalar values
+
+* Later
+  - ( ) Support multi-document files with `---` document start marker (& `...` for document end)
+  - ( ) strings: Block styles `\|-` and `>-` and `\|+` and `>+`.
+  - ( ) Better parser errors
+  - ( ) strings: Block styles with indentation indicators. (WTF)
+  - ( ) ... much more because yaml fucking sucks
+
+* Maybe
+  - ( ) Parser: directives
+  - ( ) Support extending block with anchors (`<<: *anchor`)
+  - ( ) Parser: Type enforce syntax `my-num: !!float 25`
+
+* Resources
+  - {https://yaml.org/spec/1.2.2/#66-comments}
+  - {https://stackoverflow.com/questions/3790454/how-do-i-break-a-string-in-yaml-over-multiple-lines}
+  - {https://www.educative.io/blog/advanced-yaml-syntax-cheatsheet}
+  - {https://hackage.haskell.org/package/attoparsec-0.14.4/docs/Data-Attoparsec-Text.html}
+  - {https://hackage.haskell.org/package/attoparsec-0.14.4/docs/Data-Attoparsec-Combinator.html}
