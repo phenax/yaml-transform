@@ -19,7 +19,6 @@ common common-config
     base,
     text,
     containers,
-    -- transformers,
     attoparsec
 
 common warnings
@@ -35,16 +34,18 @@ executable yaml-transform
   build-depends: lib-yaml-transform
   other-modules:
     YamlTransform.Parser,
-    YamlTransform.Types,
-    YamlTransform.Serializer
+    YamlTransform.Serializer,
+    YamlTransform.Transformer,
+    YamlTransform.Types
 
 library lib-yaml-transform
   import: common-config, warnings
   hs-source-dirs: src
   exposed-modules:
     YamlTransform.Parser,
-    YamlTransform.Types,
-    YamlTransform.Serializer
+    YamlTransform.Serializer,
+    YamlTransform.Transformer,
+    YamlTransform.Types
 
 test-suite specs
   import: common-config
@@ -53,7 +54,8 @@ test-suite specs
   main-is: Main.hs
   other-modules:
     Specs.ParserSpec,
-    Specs.SerializerSpec
+    Specs.SerializerSpec,
+    Specs.TransformerSpec
   build-depends:
     lib-yaml-transform,
     neat-interpolation,
