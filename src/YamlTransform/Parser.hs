@@ -1,18 +1,17 @@
-module YamlTransform.Parser where
+module YamlTransform.Parser (parse, Yaml (..)) where
 
 import Control.Applicative (optional)
-import Control.Monad (join, void, when)
+import Control.Arrow ((&&&))
+import Control.Monad (join, unless, void, when)
 import qualified Data.Attoparsec.Combinator as P
 import qualified Data.Attoparsec.Text as P
-import Data.Maybe (maybeToList)
+import Data.Maybe (fromMaybe, maybeToList)
 import Data.Text (Text, cons)
+import qualified Data.Text as Text
 import qualified Debug.Trace as Debug
 
-data WhitespaceType = WSTab | WSSpace
-  deriving (Show, Eq)
-
 data Yaml
-  = YMLMapping Int Text [Yaml]
+  = YMLMapping Text [Yaml]
   | YMLSequence [Yaml]
   | YMLScalar Text -- TODO: Add scalar type
   | YMLAlias Text
@@ -24,7 +23,10 @@ data Yaml
 
 debugNextChar :: P.Parser ()
 debugNextChar =
-  P.lookAhead P.anyChar >>= (Debug.traceM . ("Next char: " ++) . show)
+  P.lookAhead P.anyChar >>= (Debug.traceM . ("[Next char] " ++) . show)
+
+diverge :: (a -> b) -> (a -> c) -> a -> (b, c)
+diverge = (&&&)
 
 takeUntilParsable :: P.Parser a -> P.Parser Text
 takeUntilParsable p = do
@@ -51,24 +53,21 @@ identifierP = P.takeWhile1 (P.inClass "a-zA-Z0-9-_$")
 
 mappingP :: Int -> P.Parser [Yaml]
 mappingP currentIndent = do
-  whitespaces <- P.many' whitespaceP
-  let indent = length whitespaces
+  (indent, whitespaces) <- diverge length id <$> P.many' whitespaceP
   when (indent <= currentIndent) $ fail "Invalid indent level"
   key <- identifierP <* P.char ':'
-  (whitespaces ++) . pure . YMLMapping indent key <$> valueP indent
+  (whitespaces ++) . pure . YMLMapping key <$> valueP indent
   where
-    valueP indent' = P.choice [objectValueP indent', inlineValueP]
-    objectValueP indent' = do
-      ignorablePrefix <- P.many' $ P.choice [whitespaceP, commentP]
-      newlines <- P.many1 newlineP
-      value <- yamlP indent'
-      pure $ ignorablePrefix ++ newlines ++ value
+    valueP indent = P.choice [objectValueP indent, inlineValueP]
+    objectValueP indent = do
+      comment <- endOfLineIgnorableP
+      value <- yamlP indent
+      pure $ comment ++ value
     inlineValueP = do
       spaces <- P.many1 whitespaceP
       value <- inlineScalarP
-      spaces' <- P.many' whitespaceP
-      comment <- maybeToList <$> optional commentP
-      pure $ spaces ++ [value] ++ spaces' ++ comment
+      comment <- fromMaybe [] <$> optional (P.lookAhead whitespaceP >> endOfLineIgnorableP)
+      pure $ spaces ++ [value] ++ comment
 
 whitespaceCharP :: P.Parser Char
 whitespaceCharP = P.satisfy $ P.inClass " \t"
@@ -83,16 +82,29 @@ whitespaceP =
       YMLWSTab <$ P.char '\t'
     ]
 
+endOfLineIgnorableP :: P.Parser [Yaml]
+endOfLineIgnorableP = do
+  spaces' <- P.many' whitespaceP
+  comments <- maybeToList <$> optional commentP
+  newlines <- P.many' newlineP
+  pure $ spaces' ++ comments ++ newlines
+
 commentP :: P.Parser Yaml
 commentP = do
   P.char '#' >> P.lookAhead whitespaceCharP
   YMLComment <$> P.takeWhile1 (not . P.isEndOfLine)
 
 yamlP :: Int -> P.Parser [Yaml]
-yamlP level = join <$> P.many' yamlPart
+yamlP level = join <$> P.many1 yamlPart
   where
     -- inlineScalarP
-    yamlPart = P.choice [mappingP level, P.many1 commentP, P.many1 newlineP]
+    yamlPart = P.choice [P.many1 newlineP, P.many1 commentP, mappingP level]
+
+leftOverP :: P.Parser ()
+leftOverP = do
+  rest <- P.takeWhile (const True)
+  unless (Text.null rest) $ fail $ "Error at: " ++ show rest
+  P.endOfInput
 
 parse :: Text -> Either String [Yaml]
-parse = P.parseOnly (yamlP (-1) <* P.endOfInput)
+parse = P.parseOnly (yamlP (-1) <* leftOverP)

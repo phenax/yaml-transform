@@ -3,7 +3,7 @@ module Specs.ParserSpec where
 import qualified Debug.Trace as Debug
 import NeatInterpolation (text)
 import Test.Hspec
-import YamlTransform.Parser (WhitespaceType (..), Yaml (..), parse)
+import YamlTransform.Parser (Yaml (..), parse)
 
 test :: SpecWith ()
 test = do
@@ -14,7 +14,6 @@ test = do
           parse "hello: world. This is some value"
             `shouldBe` Right
               [ YMLMapping
-                  0
                   "hello"
                   [ YMLWSSpace,
                     YMLScalar "world. This is some value"
@@ -26,7 +25,6 @@ test = do
           parse "-he-llo-: world"
             `shouldBe` Right
               [ YMLMapping
-                  0
                   "-he-llo-"
                   [ YMLWSSpace,
                     YMLScalar "world"
@@ -35,7 +33,6 @@ test = do
           parse "_h_ello_: world"
             `shouldBe` Right
               [ YMLMapping
-                  0
                   "_h_ello_"
                   [ YMLWSSpace,
                     YMLScalar "world"
@@ -44,7 +41,6 @@ test = do
           parse "$he$llo$: world"
             `shouldBe` Right
               [ YMLMapping
-                  0
                   "$he$llo$"
                   [ YMLWSSpace,
                     YMLScalar "world"
@@ -66,13 +62,11 @@ test = do
           parse input
             `shouldBe` Right
               [ YMLMapping
-                  0
                   "root"
                   [ YMLNewLine,
                     YMLWSSpace,
                     YMLWSSpace,
                     YMLMapping
-                      2
                       "a"
                       [ YMLNewLine,
                         YMLWSSpace,
@@ -80,7 +74,6 @@ test = do
                         YMLWSSpace,
                         YMLWSSpace,
                         YMLMapping
-                          4
                           "b"
                           [ YMLNewLine,
                             YMLWSSpace,
@@ -90,7 +83,6 @@ test = do
                             YMLWSSpace,
                             YMLWSSpace,
                             YMLMapping
-                              6
                               "c"
                               [ YMLNewLine,
                                 YMLWSSpace,
@@ -102,7 +94,6 @@ test = do
                                 YMLWSSpace,
                                 YMLWSSpace,
                                 YMLMapping
-                                  8
                                   "d"
                                   [ YMLWSSpace,
                                     YMLScalar "123"
@@ -117,7 +108,6 @@ test = do
                                 YMLWSSpace,
                                 YMLWSSpace,
                                 YMLMapping
-                                  8
                                   "e"
                                   [ YMLWSSpace,
                                     YMLScalar "456"
@@ -130,7 +120,6 @@ test = do
                         YMLWSSpace,
                         YMLWSSpace,
                         YMLMapping
-                          4
                           "foo"
                           [ YMLWSSpace,
                             YMLScalar "bar"
@@ -148,54 +137,27 @@ test = do
                   bar: is foo
                 another-item: 123
                 |]
-          Debug.traceM $ show input
           parse input
             `shouldBe` Right
-              [ YMLMapping 0 "hello" [YMLWSSpace, YMLScalar "world"],
+              [ YMLMapping "hello" [YMLWSSpace, YMLScalar "world"],
                 YMLNewLine,
                 YMLMapping
-                  0
                   "foo"
                   [ YMLNewLine,
                     YMLWSSpace,
                     YMLWSSpace,
-                    YMLMapping 2 "bar" [YMLWSSpace, YMLScalar "is foo"],
+                    YMLMapping "bar" [YMLWSSpace, YMLScalar "is foo"],
                     YMLNewLine
                   ],
-                YMLMapping 0 "another-item" [YMLWSSpace, YMLScalar "123"]
+                YMLMapping "another-item" [YMLWSSpace, YMLScalar "123"]
               ]
 
     describe "with comments" $ do
-      context "when the # doesnt have whitespace after it" $ do
-        it "succeeds with mapping" $ do
-          parse "hello: This is some text #and then some more text"
-            `shouldBe` Right
-              [ YMLMapping
-                  0
-                  "hello"
-                  [ YMLWSSpace,
-                    YMLScalar "This is some text #and then some more text"
-                  ]
-              ]
-
-      context "when the # doesnt have whitespace before it" $ do
-        it "succeeds with mapping" $ do
-          parse "hello: This is some text# and then some more text"
-            `shouldBe` Right
-              [ YMLMapping
-                  0
-                  "hello"
-                  [ YMLWSSpace,
-                    YMLScalar "This is some text# and then some more text"
-                  ]
-              ]
-
       context "when a value includes a comment at the end" $ do
-        it "succeeds with mapping" $ do
+        it "recognizes it as a comment" $ do
           parse "hello: This is some text # and then some more text"
             `shouldBe` Right
               [ YMLMapping
-                  0
                   "hello"
                   [ YMLWSSpace,
                     YMLScalar "This is some text",
@@ -204,12 +166,33 @@ test = do
                   ]
               ]
 
+      context "when the # doesnt have whitespace after it" $ do
+        it "makes it a part of the value" $ do
+          parse "hello: This is some text #and then some more text"
+            `shouldBe` Right
+              [ YMLMapping
+                  "hello"
+                  [ YMLWSSpace,
+                    YMLScalar "This is some text #and then some more text"
+                  ]
+              ]
+
+      context "when the # doesnt have whitespace before it" $ do
+        it "makes it a part of the value" $ do
+          parse "hello: This is some text# and then some more text"
+            `shouldBe` Right
+              [ YMLMapping
+                  "hello"
+                  [ YMLWSSpace,
+                    YMLScalar "This is some text# and then some more text"
+                  ]
+              ]
+
       context "when the comment contains # in it" $ do
         it "includes # in comment" $ do
           parse "hello: This is some text # and # then #some more# text#"
             `shouldBe` Right
               [ YMLMapping
-                  0
                   "hello"
                   [ YMLWSSpace,
                     YMLScalar "This is some text",

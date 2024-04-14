@@ -5,7 +5,7 @@ test:
   cabal test
 
 testw:
-  ghcid --reload=src --reload=specs -c "cabal repl test:specs" -T :main
+  npx nodemon -e .hs -w src --exec 'ghcid -c "cabal repl test:specs" -T :main'
 
 build:
   nix build
