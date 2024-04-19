@@ -12,7 +12,7 @@ import YamlTransform.Parser (Yaml (..), parse)
 test :: SpecWith ()
 test = do
   describe "YamlTransform.Parser" $ do
-    describe "valid keys" $ do
+    describe "keys" $ do
       it "allows valid keys" $ do
         parse "-he-llo-: world"
           `shouldBe` Right
@@ -38,12 +38,13 @@ test = do
                   YMLScalar "world"
                 ]
             ]
+      it "does not allow invalid keys" $ do
         -- TODO: Better error messages
         parse "he#llo: world" `shouldBe` Left "Failed reading: empty"
 
     describe "with mappings" $ do
       context "when input contains a single mapping raw text mapping" $ do
-        it "creates mapping" $ do
+        it "parses mapping" $ do
           parse "hello: world. This is some value"
             `shouldBe` Right
               [ YMLMapping
@@ -54,7 +55,7 @@ test = do
               ]
 
       context "when input contains a multiple mappings" $ do
-        it "succeeds with mapping" $ do
+        it "parses mappings" $ do
           let input =
                 [text|
                 hello: world
@@ -78,7 +79,7 @@ test = do
               ]
 
       context "when input contains a complex nested mappings" $ do
-        it "creates nested mapping" $ do
+        it "parses nested mapping" $ do
           let input =
                 [text|
                 root:
@@ -160,7 +161,7 @@ test = do
 
     describe "with comments" $ do
       context "when a value includes a comment at the end of a scalar value" $ do
-        it "recognizes it as a comment" $ do
+        it "parses it as a comment" $ do
           parse "hello: This is some text # and then some more text"
             `shouldBe` Right
               [ YMLMapping
@@ -173,7 +174,7 @@ test = do
               ]
 
       context "when a value includes a comment at the end of mapping key" $ do
-        it "recognizes it as a comment" $ do
+        it "parses it as a comment" $ do
           let input =
                 [text|
                 hello: # This is a comment
@@ -193,13 +194,15 @@ test = do
               ]
 
       context "when the # doesnt have whitespace after it" $ do
-        it "makes it a part of the value" $ do
+        it "parses it as a comment" $ do
           parse "hello: This is some text #and then some more text"
             `shouldBe` Right
               [ YMLMapping
                   "hello"
                   [ YMLWSSpace,
-                    YMLScalar "This is some text #and then some more text"
+                    YMLScalar "This is some text",
+                    YMLWSSpace,
+                    YMLComment "and then some more text"
                   ]
               ]
 
@@ -248,7 +251,7 @@ test = do
               ]
 
       context "when comments are between nested mappings" $ do
-        it "creates a comment on the appropriate mapping" $ do
+        it "parses a comment on the appropriate mapping" $ do
           let input =
                 [text|
                 a:
@@ -276,7 +279,7 @@ test = do
               ]
 
       context "when comments are between nested mappings" $ do
-        it "creates a comment on the appropriate mapping" $ do
+        it "parses a comment on the appropriate mapping" $ do
           let input =
                 [text|
                 a:
@@ -317,7 +320,7 @@ test = do
 
     describe "with sequences" $ do
       context "when there is a sequence at root" $ do
-        it "creates a sequence of scalars at root" $ do
+        it "parses a sequence of scalars at root" $ do
           let input =
                 [text|
             - hello
@@ -334,7 +337,7 @@ test = do
               ]
 
       context "when sequence contains a mapping" $ do
-        it "creates a nested mapping within the sequence" $ do
+        it "parses a nested mapping within the sequence" $ do
           let input =
                 [text|
             - hello: world
@@ -356,7 +359,7 @@ test = do
               ]
 
       context "when mapping contains a sequence" $ do
-        it "creates nested sequence + mapping" $ do
+        it "parses nested sequence + mapping" $ do
           let input =
                 [text|
                 hello:
@@ -388,6 +391,28 @@ test = do
                   ],
                 YMLMapping "foo" [YMLWSSpace, YMLScalar "bar"]
               ]
+
+    -- context "when sequence is at the same level as mapping above it" $ do
+    --   it "parses a sequence of scalars at root" $ do
+    --     let input =
+    --           [text|
+    --       map:
+    --       - hello
+    --       - world
+    --       - 123
+    --       |]
+    --     parse input
+    --       `shouldBe` Right
+    --         [ YMLMapping
+    --             "map"
+    --             [ YMLNewLine,
+    --               YMLSequenceItem [YMLWSSpace, YMLScalar "hello"],
+    --               YMLNewLine,
+    --               YMLSequenceItem [YMLWSSpace, YMLScalar "world"],
+    --               YMLNewLine,
+    --               YMLSequenceItem [YMLWSSpace, YMLScalar "123"]
+    --             ]
+    --         ]
 
     describe "fixture tests" $ do
       let goldenFixtureTest prefix fixture fn = do

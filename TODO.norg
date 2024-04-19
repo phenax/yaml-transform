@@ -1,22 +1,23 @@
 * Current
-  - ( ) Parser: Anchors and aliases
-  - ( ) Parser: *bug* Allow inline comments without space after `#`
+  - ( ) Parser: *bug* Allow sequences to be at the same indentation level as parent
   - ( ) Parser: TAB IS NOT ALLOWED for indentation
+  - (x) Parser: *bug* Allow inline comments without space after `#`
+  - ( ) Parser: Anchors and aliases
+  - ( ) Inline sequence representation `['a', 'b', 'c']`
+  - ( ) Allow property keys to start on the line after the `-` of a sequence
   - ( ) Transform for scalar
   - ( ) CLI: Update path in yaml
   - ( ) CLI: Remove key
   - ( ) CLI: Get value
-  - ( ) Parser: *bug* Allow sequences to be at the same indentation level as parent
   - ( ) numbers?
   - ( ) Unquoted string nuances (Problem chars `[]{}:>|` have to be quoted)
-  - ( ) Inline sequence representation `['a', 'b', 'c']`
-  - ( ) Allow property keys to start on the line after the `-` of a sequence
   - ( ) strings: single/double quoted
   - ( ) strings: Folded style `>`
   - ( ) strings: Literal style `\|`
   - ( ) Escaping character
   - ( ) Figure out nuances of keys
   - ( ) Parser: types for scalar values
+  - ( ) Fix nix build (test fails because cant load fixture)
 
 * Later
   - ( ) Support multi-document files with `---` document start marker (& `...` for document end)

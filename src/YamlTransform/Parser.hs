@@ -10,9 +10,15 @@ import qualified Data.Text as Text
 import qualified Debug.Trace as Debug
 import YamlTransform.Types (Yaml (..))
 
+concatListP :: P.Parser [a] -> P.Parser [a] -> P.Parser [a]
+concatListP p1 p2 = p1 >>= (\v -> (v ++) <$> p2)
+
+debugNext :: (Show a) => P.Parser a -> P.Parser ()
+debugNext p =
+  P.lookAhead p >>= (Debug.traceM . ("[Next] " ++) . show)
+
 debugNextChar :: P.Parser ()
-debugNextChar =
-  P.lookAhead P.anyChar >>= (Debug.traceM . ("[Next char] " ++) . show)
+debugNextChar = debugNext P.anyChar
 
 takeUntilParsable :: P.Parser a -> P.Parser Text
 takeUntilParsable p = do
@@ -31,7 +37,7 @@ inlineScalarP =
       P.choice
         [ P.endOfLine,
           P.endOfInput,
-          void $ whitespaceP >> P.char '#' >> whitespaceP
+          void $ whitespaceP >> P.char '#'
         ]
 
 identifierP :: P.Parser Text
@@ -46,15 +52,9 @@ mappingP parentIndent prefixIndent = do
   (whitespaces ++) . pure . YMLMapping key <$> valueP indent
   where
     valueP indent = P.choice [objectValueP indent, inlineValueP]
-    objectValueP indent = do
-      comment <- endOfLineIgnorableP
-      value <- yamlP indent 0
-      pure $ comment ++ value
-    inlineValueP = do
-      spaces <- P.many1 whitespaceP
-      value <- inlineScalarP
-      comment <- fromMaybe [] <$> optional (P.lookAhead whitespaceP >> endOfLineIgnorableP)
-      pure $ spaces ++ [value] ++ comment
+    objectValueP indent = endOfLineIgnorableP `concatListP` yamlP indent 0
+    inlineValueP = P.many1 whitespaceP `concatListP` (pure <$> inlineScalarP) `concatListP` inlineEndP
+    inlineEndP = fromMaybe [] <$> optional (P.lookAhead whitespaceP >> endOfLineIgnorableP)
 
 sequenceP :: Int -> P.Parser [Yaml]
 sequenceP parentIndent = do
@@ -65,13 +65,8 @@ sequenceP parentIndent = do
   values <- P.choice [yamlP indent indent, inlineValueP]
   pure $ whitespaces ++ [YMLSequenceItem values]
   where
-    inlineValueP = do
-      spaces <- P.many1 whitespaceP
-      value <- inlineScalarP
-      comment <-
-        fromMaybe []
-          <$> optional (P.lookAhead whitespaceP >> endOfLineIgnorableP)
-      pure $ spaces ++ [value] ++ comment
+    inlineValueP = P.many1 whitespaceP `concatListP` (pure <$> inlineScalarP) `concatListP` inlineEndP
+    inlineEndP = fromMaybe [] <$> optional (P.lookAhead whitespaceP >> endOfLineIgnorableP)
 
 newlineP :: P.Parser Yaml
 newlineP = YMLNewLine <$ P.endOfLine
@@ -89,7 +84,7 @@ endOfLineIgnorableP = do
 
 commentP :: P.Parser Yaml
 commentP = do
-  P.char '#' >> P.lookAhead whitespaceP
+  P.char '#'
   YMLComment <$> P.takeWhile1 (not . P.isEndOfLine)
 
 fullCommentP :: Int -> P.Parser [Yaml]

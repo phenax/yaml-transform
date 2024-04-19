@@ -13,7 +13,7 @@ import YamlTransform.Transformer (updateKey, updatePath)
 
 test :: SpecWith ()
 test = do
-  describe "YamlTransform.TransformerSpec" $ do
+  describe "YamlTransform.Transformer" $ do
     describe "updateKey" $ do
       context "when yaml doc contains the key" $ do
         let doc =
