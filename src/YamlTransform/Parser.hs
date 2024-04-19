@@ -43,11 +43,18 @@ inlineScalarP =
 identifierP :: P.Parser Text
 identifierP = P.takeWhile1 (P.inClass "a-zA-Z0-9-_$")
 
+indentCheckP :: Int -> Bool -> P.Parser [Yaml]
+indentCheckP parentIndent allowSameLevel = do
+  whitespaces <- P.many' indentWhitespaceP
+  let indent = length whitespaces
+  when (indent < parentIndent || (indent == parentIndent && not allowSameLevel)) $
+    fail "Invalid indent level"
+  pure whitespaces
+
 mappingP :: Int -> Int -> P.Parser [Yaml]
 mappingP parentIndent prefixIndent = do
-  whitespaces <- P.many' whitespaceP
+  whitespaces <- indentCheckP (parentIndent - prefixIndent) False
   let indent = length whitespaces + prefixIndent
-  when (indent <= parentIndent) $ fail "Invalid indent level"
   key <- identifierP <* P.char ':'
   (whitespaces ++) . pure . YMLMapping key <$> valueP indent
   where
@@ -56,12 +63,11 @@ mappingP parentIndent prefixIndent = do
     inlineValueP = P.many1 whitespaceP `concatListP` (pure <$> inlineScalarP) `concatListP` inlineEndP
     inlineEndP = fromMaybe [] <$> optional (P.lookAhead whitespaceP >> endOfLineIgnorableP)
 
-sequenceP :: Int -> P.Parser [Yaml]
-sequenceP parentIndent = do
-  whitespaces <- P.many' whitespaceP
-  let indent = length whitespaces
-  when (indent <= parentIndent) $ fail "Invalid indent level"
+sequenceItemP :: Int -> P.Parser [Yaml]
+sequenceItemP parentIndent = do
+  whitespaces <- indentCheckP parentIndent False
   P.char '-'
+  let indent = length whitespaces
   values <- P.choice [yamlP indent indent, inlineValueP]
   pure $ whitespaces ++ [YMLSequenceItem values]
   where
@@ -70,6 +76,9 @@ sequenceP parentIndent = do
 
 newlineP :: P.Parser Yaml
 newlineP = YMLNewLine <$ P.endOfLine
+
+indentWhitespaceP :: P.Parser Yaml
+indentWhitespaceP = YMLWSSpace <$ P.space
 
 whitespaceP :: P.Parser Yaml
 whitespaceP =
@@ -102,7 +111,7 @@ yamlP parentIndent prefixIndent = join <$> P.many1 yamlPart
       P.choice
         [ P.many1 newlineP,
           fullCommentP parentIndent,
-          sequenceP parentIndent,
+          sequenceItemP parentIndent,
           mappingP parentIndent prefixIndent
         ]
 

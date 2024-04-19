@@ -5,7 +5,7 @@ import Data.Text (Text)
 data Yaml
   = YMLMapping Text [Yaml]
   | YMLSequenceItem [Yaml]
-  | YMLScalar Text -- TODO: Add scalar type
+  | YMLScalar Text -- TODO: Add scalar types
   | -- | YMLAlias Text -- TODO: Alias
     YMLComment Text
   | YMLWSSpace

@@ -392,27 +392,33 @@ test = do
                 YMLMapping "foo" [YMLWSSpace, YMLScalar "bar"]
               ]
 
-    -- context "when sequence is at the same level as mapping above it" $ do
-    --   it "parses a sequence of scalars at root" $ do
-    --     let input =
-    --           [text|
-    --       map:
-    --       - hello
-    --       - world
-    --       - 123
-    --       |]
-    --     parse input
-    --       `shouldBe` Right
-    --         [ YMLMapping
-    --             "map"
-    --             [ YMLNewLine,
-    --               YMLSequenceItem [YMLWSSpace, YMLScalar "hello"],
-    --               YMLNewLine,
-    --               YMLSequenceItem [YMLWSSpace, YMLScalar "world"],
-    --               YMLNewLine,
-    --               YMLSequenceItem [YMLWSSpace, YMLScalar "123"]
-    --             ]
-    --         ]
+      context "when mapping starts on the line below the start of a sequence" $ do
+        it "parses a the mapping inside sequence item" $ do
+          let input =
+                [text|
+            - hello
+            -
+              key1: v1
+              key2: v2
+            - 123
+            |]
+          parse input
+            `shouldBe` Right
+              [ YMLSequenceItem [YMLWSSpace, YMLScalar "hello"],
+                YMLNewLine,
+                YMLSequenceItem
+                  [ YMLNewLine,
+                    YMLWSSpace,
+                    YMLWSSpace,
+                    YMLMapping "key1" [YMLWSSpace, YMLScalar "v1"],
+                    YMLNewLine,
+                    YMLWSSpace,
+                    YMLWSSpace,
+                    YMLMapping "key2" [YMLWSSpace, YMLScalar "v2"],
+                    YMLNewLine
+                  ],
+                YMLSequenceItem [YMLWSSpace, YMLScalar "123"]
+              ]
 
     describe "fixture tests" $ do
       let goldenFixtureTest prefix fixture fn = do
@@ -424,6 +430,4 @@ test = do
 
       let prefix = "Parser"
 
-      goldenFixtureTest prefix "basic-spaces.yml" (pure . parse)
-
-      goldenFixtureTest prefix "basic-tabs.yml" (pure . parse)
+      goldenFixtureTest prefix "basic.yml" (pure . parse)

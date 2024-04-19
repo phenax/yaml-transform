@@ -60,10 +60,6 @@ test = do
                 input <- Text.pack <$> runIO (readFile $ "specs/" ++ path)
                 fn input $ parse input
 
-      withFixture "basic-spaces.yml" $ \input parsed -> do
-        it "serializes to original file" $ do
-          fmap serialize parsed `shouldBe` Right input
-
-      withFixture "basic-tabs.yml" $ \input parsed -> do
+      withFixture "basic.yml" $ \input parsed -> do
         it "serializes to original file" $ do
           fmap serialize parsed `shouldBe` Right input

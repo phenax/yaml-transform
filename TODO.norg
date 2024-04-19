@@ -1,10 +1,9 @@
 * Current
-  - ( ) Parser: *bug* Allow sequences to be at the same indentation level as parent
-  - ( ) Parser: TAB IS NOT ALLOWED for indentation
   - (x) Parser: *bug* Allow inline comments without space after `#`
-  - ( ) Parser: Anchors and aliases
+  - (x) Allow property keys to start on the line after the `-` of a sequence
   - ( ) Inline sequence representation `['a', 'b', 'c']`
-  - ( ) Allow property keys to start on the line after the `-` of a sequence
+  - ( ) Parser: Anchors and aliases
+  - ( ) Parser: *bug* Allow sequences to be at the same indentation level as parent
   - ( ) Transform for scalar
   - ( ) CLI: Update path in yaml
   - ( ) CLI: Remove key
