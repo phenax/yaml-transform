@@ -1,7 +1,9 @@
 module Specs.ParserSpec where
 
 import Data.Either (isLeft)
+import Data.FileEmbed (embedFile)
 import qualified Data.Text as Text
+import Data.Text.Encoding (decodeLatin1)
 import qualified Data.Text.Lazy as LazyText
 import qualified Debug.Trace as Debug
 import NeatInterpolation (text)
@@ -40,7 +42,6 @@ test = do
                 ]
             ]
       it "does not allow invalid keys" $ do
-        -- TODO: Better error messages
         parse "he#llo: world" `shouldBe` Left "Failed reading: empty"
 
     describe "with scalars" $ do
@@ -582,14 +583,10 @@ test = do
                   ]
               ]
 
-    describe "fixture tests" $ do
-      let goldenFixtureTest prefix fixture fn = do
-            let path = "fixtures/" ++ fixture
-            input <- Text.pack <$> runIO (readFile $ "specs/" ++ path)
-            val <- runIO $ fn input
-            it path $ do
-              defaultGolden (prefix ++ "-" ++ path) . LazyText.unpack . pShowNoColor $ val
+    fdescribe "fixture tests" $ do
+      let toGolden = LazyText.unpack . pShowNoColor
 
-      let prefix = "Parser"
-
-      goldenFixtureTest prefix "basic.yml" (pure . parse)
+      describe "basic.yml" $ do
+        it "parses correctly" $ do
+          let input = decodeLatin1 $(embedFile "specs/fixtures/basic.yml")
+          defaultGolden "parser-fixtures/basic.yml" . toGolden . parse $ input

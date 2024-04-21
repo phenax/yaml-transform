@@ -1,6 +1,8 @@
 module Specs.SerializerSpec where
 
+import Data.FileEmbed (embedFile)
 import qualified Data.Text as Text
+import Data.Text.Encoding (decodeLatin1)
 import qualified Data.Text.Lazy as LazyText
 import qualified Debug.Trace as Debug
 import NeatInterpolation (text)
@@ -89,13 +91,6 @@ test = do
             |]
 
     describe "fixture tests" $ do
-      let withFixture fixture fn = do
-            let path = "fixtures/" ++ fixture
-            describe path $ do
-              context "parsed fixture" $ do
-                input <- Text.pack <$> runIO (readFile $ "specs/" ++ path)
-                fn input $ parse input
-
-      withFixture "basic.yml" $ \input parsed -> do
-        it "serializes to original file" $ do
-          fmap serialize parsed `shouldBe` Right input
+      it "basic.yml serializes to original file contents" $ do
+        let input = decodeLatin1 $(embedFile "specs/fixtures/basic.yml")
+        fmap serialize (parse input) `shouldBe` Right input

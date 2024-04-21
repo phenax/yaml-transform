@@ -16,9 +16,8 @@
             fileset = lib.fileset.unions [
               ./src
               ./specs
+              ./.golden
               ./yaml-transform.cabal
-              # ./LICENSE
-              # ./README.md
             ];
           });
 
