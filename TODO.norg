@@ -15,6 +15,7 @@
   - ( ) strings: Literal style `\|`
   - ( ) Escaping character
   - ( ) Figure out nuances of keys
+  - ( ) Allow quoted keys
   - ( ) Parser: types for scalar values
   - ( ) Fix nix build (test fails because cant load fixture)
 
@@ -27,7 +28,7 @@
 
 * Maybe
   - ( ) Parser: directives
-  - ( ) Support extending block with anchors (`<<: *anchor`)
+  - (x) Support extending block with anchors (`<<: *anchor`)
   - ( ) Parser: Type enforce syntax `my-num: !!float 25`
 
 * Resources

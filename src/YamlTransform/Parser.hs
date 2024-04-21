@@ -4,37 +4,15 @@ import Control.Applicative (optional)
 import Control.Monad (join, unless, void, when)
 import qualified Data.Attoparsec.Combinator as P
 import qualified Data.Attoparsec.Text as P
-import Data.List (foldl')
 import Data.Maybe (fromMaybe, maybeToList)
-import Data.Text (Text, cons)
+import Data.Text (Text)
 import qualified Data.Text as Text
-import qualified Debug.Trace as Debug
+import qualified YamlTransform.Parser.Util as P
 import YamlTransform.Types (Yaml (..))
-
-debugNext :: (Show a) => P.Parser a -> P.Parser ()
-debugNext p =
-  P.lookAhead p >>= (Debug.traceM . ("[Next] " ++) . show)
-
-debugNextChar :: P.Parser ()
-debugNextChar = debugNext P.anyChar
-
-concatListP :: [P.Parser [a]] -> P.Parser [a]
-concatListP = foldl' concatListP' (pure [])
-  where
-    concatListP' p1 p2 = p1 >>= (\v -> (v ++) <$> p2)
-
-takeUntilParsable :: P.Parser a -> P.Parser Text
-takeUntilParsable p = do
-  t <- P.lookAhead $ optional p
-  case t of
-    Just _ -> pure ""
-    Nothing -> do
-      c <- P.anyChar
-      cons c <$> takeUntilParsable p
 
 undelimitedInlineString :: P.Parser Yaml
 undelimitedInlineString =
-  YMLScalar <$> takeUntilParsable endOfInlineValue
+  YMLScalar <$> P.takeUntilParsable endOfInlineValue
   where
     endOfInlineValue =
       P.choice
@@ -61,17 +39,17 @@ nonRawScalarValueP = P.choice [delimitedInlineStringP, numberP]
 inlineSequenceP :: P.Parser Yaml
 inlineSequenceP = do
   values <- P.char '[' *> P.sepBy inlineValueP (P.char ',') <* P.char ']'
-  pure $ YMLInlineMapping values
+  pure $ YMLInlineSequence values
   where
-    inlineValueP = concatListP [ignorablesP, pure <$> nonRawScalarValueP, ignorablesP]
-    ignorablesP = concatListP [whitesP, fromMaybe [] <$> optional endOfLineIgnorableP, whitesP]
+    inlineValueP = P.concatListP [ignorablesP, pure <$> nonRawScalarValueP, ignorablesP]
+    ignorablesP = P.concatListP [whitesP, fromMaybe [] <$> optional endOfLineIgnorableP, whitesP]
     whitesP = P.many' (P.choice [whitespaceP, newlineP])
 
 inlineYmlValueP :: P.Parser [Yaml]
 inlineYmlValueP = pure <$> P.choice [inlineSequenceP, inlineScalarValueP]
 
 identifierP :: P.Parser Text
-identifierP = P.takeWhile1 (P.inClass "a-zA-Z0-9-_$")
+identifierP = P.choice [P.string "<<", P.takeWhile1 (P.inClass "a-zA-Z0-9-_$")]
 
 indentCheckP :: Int -> Bool -> P.Parser [Yaml]
 indentCheckP parentIndent allowSameLevel = do
@@ -89,8 +67,8 @@ mappingP parentIndent prefixIndent = do
   (whitespaces ++) . pure . YMLMapping key <$> valueP indent
   where
     valueP indent = P.choice [objectValueP indent, inlineValueP]
-    objectValueP indent = concatListP [endOfLineIgnorableP, yamlP indent 0]
-    inlineValueP = concatListP [P.many1 whitespaceP, inlineYmlValueP, inlineEndP]
+    objectValueP indent = P.concatListP [endOfLineIgnorableP, yamlP indent 0]
+    inlineValueP = P.concatListP [P.many1 whitespaceP, inlineYmlValueP, inlineEndP]
     inlineEndP = fromMaybe [] <$> optional (P.lookAhead whitespaceP *> endOfLineIgnorableP)
 
 sequenceItemP :: Int -> P.Parser [Yaml]
@@ -100,7 +78,7 @@ sequenceItemP parentIndent = do
   values <- P.char '-' *> P.choice [yamlP indent indent, inlineValueP]
   pure $ whitespaces ++ [YMLSequenceItem values]
   where
-    inlineValueP = concatListP [P.many1 whitespaceP, inlineYmlValueP, inlineEndP]
+    inlineValueP = P.concatListP [P.many1 whitespaceP, inlineYmlValueP, inlineEndP]
     inlineEndP = fromMaybe [] <$> optional (P.lookAhead whitespaceP *> endOfLineIgnorableP)
 
 newlineP :: P.Parser Yaml

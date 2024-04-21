@@ -1,6 +1,6 @@
 module YamlTransform.Serializer (serialize) where
 
-import Data.Text (Text)
+import Data.Text (Text, intercalate)
 import YamlTransform.Types (Yaml (..))
 
 tokenToText :: Yaml -> Text
@@ -11,6 +11,7 @@ tokenToText (YMLComment c) = "#" <> c
 tokenToText (YMLMapping k values) = k <> ":" <> serialize values
 tokenToText (YMLSequenceItem values) = "-" <> serialize values
 tokenToText (YMLScalar s) = s
+tokenToText (YMLInlineSequence values) = "[" <> intercalate "," (serialize <$> values) <> "]"
 
 serialize :: [Yaml] -> Text
 serialize = foldr ((<>) . tokenToText) ""

@@ -456,7 +456,7 @@ test = do
         it "parses the inline sequence of scalars" $ do
           parse "['hello', 'wo,rld', 123]"
             `shouldBe` Right
-              [ YMLInlineMapping
+              [ YMLInlineSequence
                   [ [YMLScalar "hello"],
                     [YMLWSSpace, YMLScalar "wo,rld"],
                     [YMLWSSpace, YMLScalar "123.0"]
@@ -470,7 +470,7 @@ test = do
               [ YMLMapping
                   "mapping"
                   [ YMLWSSpace,
-                    YMLInlineMapping
+                    YMLInlineSequence
                       [ [YMLScalar "hello"],
                         [YMLWSSpace, YMLScalar "wo,rld"],
                         [YMLWSSpace, YMLScalar "123.0"]
@@ -484,7 +484,7 @@ test = do
             `shouldBe` Right
               [ YMLSequenceItem
                   [ YMLWSSpace,
-                    YMLInlineMapping
+                    YMLInlineSequence
                       [ [YMLScalar "hello"],
                         [YMLWSSpace, YMLScalar "wo,rld"],
                         [YMLWSSpace, YMLScalar "123.0"]
@@ -512,7 +512,7 @@ test = do
                     YMLMapping
                       "mapping"
                       [ YMLWSSpace,
-                        YMLInlineMapping
+                        YMLInlineSequence
                           [ [YMLWSSpace, YMLScalar "hello"],
                             [ YMLNewLine,
                               YMLWSSpace,
@@ -543,7 +543,7 @@ test = do
               [ YMLMapping
                   "mapping"
                   [ YMLWSSpace,
-                    YMLInlineMapping
+                    YMLInlineSequence
                       [ [ YMLNewLine,
                           YMLWSSpace,
                           YMLWSSpace,

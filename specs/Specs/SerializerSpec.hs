@@ -52,6 +52,42 @@ test = do
                 c: 2
           |]
 
+    describe "with inline mapping" $ do
+      context "when inline mapping with comments is present" $ do
+        it "serializes it correctly" $ do
+          let input =
+                [ YMLMapping
+                    "mapping"
+                    [ YMLWSSpace,
+                      YMLInlineSequence
+                        [ [ YMLNewLine,
+                            YMLWSSpace,
+                            YMLWSSpace,
+                            YMLScalar "hello"
+                          ],
+                          [ YMLWSSpace,
+                            YMLComment " Comment 1",
+                            YMLNewLine,
+                            YMLWSSpace,
+                            YMLWSSpace,
+                            YMLScalar "123.0",
+                            YMLWSSpace,
+                            YMLComment " Comment 2",
+                            YMLNewLine
+                          ]
+                        ],
+                      YMLWSSpace,
+                      YMLComment " Comment 3"
+                    ]
+                ]
+          serialize input
+            `shouldBe` [text|
+              mapping: [
+                hello, # Comment 1
+                123.0 # Comment 2
+              ] # Comment 3
+            |]
+
     describe "fixture tests" $ do
       let withFixture fixture fn = do
             let path = "fixtures/" ++ fixture

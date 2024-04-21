@@ -20,7 +20,7 @@ data Yaml
   = YMLMapping Text [Yaml]
   | YMLSequenceItem [Yaml]
   | YMLScalar Text
-  | YMLInlineMapping [[Yaml]]
+  | YMLInlineSequence [[Yaml]]
   | -- | YMLAlias Text -- TODO: Alias
     YMLComment Text
   | YMLWSSpace

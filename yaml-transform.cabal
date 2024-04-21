@@ -35,6 +35,7 @@ executable yaml-transform
   build-depends: lib-yaml-transform
   other-modules:
     YamlTransform.Parser,
+    YamlTransform.Parser.Util,
     YamlTransform.Serializer,
     YamlTransform.Transformer,
     YamlTransform.Types
@@ -44,6 +45,7 @@ library lib-yaml-transform
   hs-source-dirs: src
   exposed-modules:
     YamlTransform.Parser,
+    YamlTransform.Parser.Util,
     YamlTransform.Serializer,
     YamlTransform.Transformer,
     YamlTransform.Types
