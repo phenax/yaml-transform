@@ -17,7 +17,7 @@
   - ( ) Figure out nuances of keys
   - ( ) Allow quoted keys
   - ( ) Parser: types for scalar values
-  - ( ) Fix nix build (test fails because cant load fixture)
+  - (x) Fix nix build (test fails because cant load fixture)
 
 * Later
   - ( ) Support multi-document files with `---` document start marker (& `...` for document end)

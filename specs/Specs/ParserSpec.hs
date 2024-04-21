@@ -470,17 +470,6 @@ test = do
               ]
 
     describe "with inline sequence" $ do
-      context "when there is an inline sequence at root" $ do
-        it "parses the inline sequence of scalars" $ do
-          parse "['hello', 'wo,rld', 123]"
-            `shouldBe` Right
-              [ YMLInlineSequence
-                  [ [YMLScalar "hello"],
-                    [YMLWSSpace, YMLScalar "wo,rld"],
-                    [YMLWSSpace, YMLScalar "123.0"]
-                  ]
-              ]
-
       context "when there is an inline sequence as a mapping value" $ do
         it "parses the inline sequence of scalars" $ do
           parse "mapping: ['hello', 'wo,rld', 123]"
@@ -583,7 +572,7 @@ test = do
                   ]
               ]
 
-    fdescribe "fixture tests" $ do
+    describe "fixture tests" $ do
       let toGolden = LazyText.unpack . pShowNoColor
 
       describe "basic.yml" $ do

@@ -117,7 +117,6 @@ yamlP parentIndent prefixIndent = join <$> P.many1 yamlPart
     yamlPart =
       P.choice
         [ P.many1 newlineP,
-          pure <$> inlineSequenceP,
           fullCommentP parentIndent,
           sequenceItemP parentIndent,
           mappingP parentIndent prefixIndent
