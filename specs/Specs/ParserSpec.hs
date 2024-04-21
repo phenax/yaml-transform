@@ -73,6 +73,23 @@ test = do
             `shouldBe` Right
               [YMLMapping "hello" [YMLWSSpace, YMLScalar "world"]]
 
+      context "when given a delimited string crossing multiple lines" $ do
+        it "parses mapping" $ do
+          let input =
+                [text|
+            key: "hello world
+              testing mutliline
+              here"
+            |]
+          parse input
+            `shouldBe` Right
+              [ YMLMapping
+                  "key"
+                  [ YMLWSSpace,
+                    YMLScalar "hello world\n  testing mutliline\n  here"
+                  ]
+              ]
+
     describe "with mappings" $ do
       context "when input contains a single mapping raw text mapping" $ do
         it "parses mapping" $ do
