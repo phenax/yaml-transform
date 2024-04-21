@@ -1,5 +1,6 @@
 module Specs.ParserSpec where
 
+import Data.Either (isLeft)
 import qualified Data.Text as Text
 import qualified Data.Text.Lazy as LazyText
 import qualified Debug.Trace as Debug
@@ -42,6 +43,36 @@ test = do
         -- TODO: Better error messages
         parse "he#llo: world" `shouldBe` Left "Failed reading: empty"
 
+    describe "with scalars" $ do
+      context "when given a raw string" $ do
+        it "parses mapping" $ do
+          parse "hello: world !@#$%^&()_+-=;':,./<>?"
+            `shouldBe` Right
+              [ YMLMapping
+                  "hello"
+                  [ YMLWSSpace,
+                    YMLScalar "world !@#$%^&()_+-=;':,./<>?"
+                  ]
+              ]
+
+      context "when invalid characters for raw string" $ do
+        it "parses mapping" $ do
+          parse "hello: jello [" `shouldSatisfy` isLeft
+          parse "hello: jello ]" `shouldSatisfy` isLeft
+          parse "hello: jello {" `shouldSatisfy` isLeft
+          parse "hello: jello }" `shouldSatisfy` isLeft
+
+      context "when given a delimited string" $ do
+        it "parses mapping" $ do
+          parse "hello: 'world'"
+            `shouldBe` Right
+              [YMLMapping "hello" [YMLWSSpace, YMLScalar "world"]]
+
+        it "parses mapping" $ do
+          parse "hello: \"world\""
+            `shouldBe` Right
+              [YMLMapping "hello" [YMLWSSpace, YMLScalar "world"]]
+
     describe "with mappings" $ do
       context "when input contains a single mapping raw text mapping" $ do
         it "parses mapping" $ do
@@ -75,7 +106,7 @@ test = do
                     YMLMapping "bar" [YMLWSSpace, YMLScalar "is foo"],
                     YMLNewLine
                   ],
-                YMLMapping "another-item" [YMLWSSpace, YMLScalar "123"]
+                YMLMapping "another-item" [YMLWSSpace, YMLScalar "123.0"]
               ]
 
       context "when input contains a complex nested mappings" $ do
@@ -127,7 +158,7 @@ test = do
                                 YMLMapping
                                   "d"
                                   [ YMLWSSpace,
-                                    YMLScalar "123"
+                                    YMLScalar "123.0"
                                   ],
                                 YMLNewLine,
                                 YMLWSSpace,
@@ -141,7 +172,7 @@ test = do
                                 YMLMapping
                                   "e"
                                   [ YMLWSSpace,
-                                    YMLScalar "456"
+                                    YMLScalar "456.0"
                                   ],
                                 YMLNewLine
                               ]
@@ -189,7 +220,7 @@ test = do
                     YMLNewLine,
                     YMLWSSpace,
                     YMLWSSpace,
-                    YMLMapping "world" [YMLWSSpace, YMLScalar "123"]
+                    YMLMapping "world" [YMLWSSpace, YMLScalar "123.0"]
                   ]
               ]
 
@@ -243,11 +274,11 @@ test = do
             `shouldBe` Right
               [ YMLComment " This is a comment",
                 YMLNewLine,
-                YMLMapping "a" [YMLWSSpace, YMLScalar "1"],
+                YMLMapping "a" [YMLWSSpace, YMLScalar "1.0"],
                 YMLNewLine,
                 YMLComment " This is another a comment",
                 YMLNewLine,
-                YMLMapping "b" [YMLWSSpace, YMLScalar "2"]
+                YMLMapping "b" [YMLWSSpace, YMLScalar "2.0"]
               ]
 
       context "when comments are between nested mappings" $ do
@@ -266,7 +297,7 @@ test = do
                   [ YMLNewLine,
                     YMLWSSpace,
                     YMLWSSpace,
-                    YMLMapping "b" [YMLWSSpace, YMLScalar "1"],
+                    YMLMapping "b" [YMLWSSpace, YMLScalar "1.0"],
                     YMLNewLine,
                     YMLWSSpace,
                     YMLWSSpace,
@@ -274,7 +305,7 @@ test = do
                     YMLNewLine,
                     YMLWSSpace,
                     YMLWSSpace,
-                    YMLMapping "c" [YMLWSSpace, YMLScalar "2"]
+                    YMLMapping "c" [YMLWSSpace, YMLScalar "2.0"]
                   ]
               ]
 
@@ -303,7 +334,7 @@ test = do
                         YMLWSSpace,
                         YMLWSSpace,
                         YMLWSSpace,
-                        YMLMapping "c" [YMLWSSpace, YMLScalar "2"],
+                        YMLMapping "c" [YMLWSSpace, YMLScalar "2.0"],
                         YMLNewLine
                       ],
                     YMLWSSpace,
@@ -312,10 +343,10 @@ test = do
                     YMLNewLine,
                     YMLWSSpace,
                     YMLWSSpace,
-                    YMLMapping "d" [YMLWSSpace, YMLScalar "5"],
+                    YMLMapping "d" [YMLWSSpace, YMLScalar "5.0"],
                     YMLNewLine
                   ],
-                YMLMapping "c" [YMLWSSpace, YMLScalar "2"]
+                YMLMapping "c" [YMLWSSpace, YMLScalar "2.0"]
               ]
 
     describe "with sequences" $ do
@@ -333,7 +364,7 @@ test = do
                 YMLNewLine,
                 YMLSequenceItem [YMLWSSpace, YMLScalar "world"],
                 YMLNewLine,
-                YMLSequenceItem [YMLWSSpace, YMLScalar "123"]
+                YMLSequenceItem [YMLWSSpace, YMLScalar "123.0"]
               ]
 
       context "when sequence contains a mapping" $ do
@@ -355,7 +386,7 @@ test = do
                     YMLMapping "foo" [YMLWSSpace, YMLScalar "bar"],
                     YMLNewLine
                   ],
-                YMLSequenceItem [YMLWSSpace, YMLScalar "123"]
+                YMLSequenceItem [YMLWSSpace, YMLScalar "123.0"]
               ]
 
       context "when mapping contains a sequence" $ do
@@ -396,12 +427,12 @@ test = do
         it "parses a the mapping inside sequence item" $ do
           let input =
                 [text|
-            - hello
-            -
-              key1: v1
-              key2: v2
-            - 123
-            |]
+                - hello
+                -
+                  key1: v1
+                  key2: v2
+                - 123
+                |]
           parse input
             `shouldBe` Right
               [ YMLSequenceItem [YMLWSSpace, YMLScalar "hello"],
@@ -417,7 +448,121 @@ test = do
                     YMLMapping "key2" [YMLWSSpace, YMLScalar "v2"],
                     YMLNewLine
                   ],
-                YMLSequenceItem [YMLWSSpace, YMLScalar "123"]
+                YMLSequenceItem [YMLWSSpace, YMLScalar "123.0"]
+              ]
+
+    describe "with inline sequence" $ do
+      context "when there is an inline sequence at root" $ do
+        it "parses the inline sequence of scalars" $ do
+          parse "['hello', 'wo,rld', 123]"
+            `shouldBe` Right
+              [ YMLInlineMapping
+                  [ [YMLScalar "hello"],
+                    [YMLWSSpace, YMLScalar "wo,rld"],
+                    [YMLWSSpace, YMLScalar "123.0"]
+                  ]
+              ]
+
+      context "when there is an inline sequence as a mapping value" $ do
+        it "parses the inline sequence of scalars" $ do
+          parse "mapping: ['hello', 'wo,rld', 123]"
+            `shouldBe` Right
+              [ YMLMapping
+                  "mapping"
+                  [ YMLWSSpace,
+                    YMLInlineMapping
+                      [ [YMLScalar "hello"],
+                        [YMLWSSpace, YMLScalar "wo,rld"],
+                        [YMLWSSpace, YMLScalar "123.0"]
+                      ]
+                  ]
+              ]
+
+      context "when there is an inline sequence as a sequence value" $ do
+        it "parses the inline sequence of scalars" $ do
+          parse "- ['hello', 'wo,rld', 123]"
+            `shouldBe` Right
+              [ YMLSequenceItem
+                  [ YMLWSSpace,
+                    YMLInlineMapping
+                      [ [YMLScalar "hello"],
+                        [YMLWSSpace, YMLScalar "wo,rld"],
+                        [YMLWSSpace, YMLScalar "123.0"]
+                      ]
+                  ]
+              ]
+
+      context "when the inline sequence is split into multiple lines" $ do
+        it "parses the inline sequence of scalars" $ do
+          let input =
+                [text|
+              root:
+                mapping: [ 'hello',
+                    'wo,rld',
+                123
+              ]
+            |]
+          parse input
+            `shouldBe` Right
+              [ YMLMapping
+                  "root"
+                  [ YMLNewLine,
+                    YMLWSSpace,
+                    YMLWSSpace,
+                    YMLMapping
+                      "mapping"
+                      [ YMLWSSpace,
+                        YMLInlineMapping
+                          [ [YMLWSSpace, YMLScalar "hello"],
+                            [ YMLNewLine,
+                              YMLWSSpace,
+                              YMLWSSpace,
+                              YMLWSSpace,
+                              YMLWSSpace,
+                              YMLWSSpace,
+                              YMLWSSpace,
+                              YMLScalar "wo,rld"
+                            ],
+                            [YMLNewLine, YMLWSSpace, YMLWSSpace, YMLScalar "123.0", YMLNewLine]
+                          ]
+                      ]
+                  ]
+              ]
+
+      context "when the inline sequence is split into multiple lines with comments" $ do
+        it "parses the inline sequence of scalars" $ do
+          let input =
+                [text|
+                mapping: [
+                  'hello', # Comment 1
+                  123 # Comment 2
+                ] # Comment 3
+            |]
+          parse input
+            `shouldBe` Right
+              [ YMLMapping
+                  "mapping"
+                  [ YMLWSSpace,
+                    YMLInlineMapping
+                      [ [ YMLNewLine,
+                          YMLWSSpace,
+                          YMLWSSpace,
+                          YMLScalar "hello"
+                        ],
+                        [ YMLWSSpace,
+                          YMLComment " Comment 1",
+                          YMLNewLine,
+                          YMLWSSpace,
+                          YMLWSSpace,
+                          YMLScalar "123.0",
+                          YMLWSSpace,
+                          YMLComment " Comment 2",
+                          YMLNewLine
+                        ]
+                      ],
+                    YMLWSSpace,
+                    YMLComment " Comment 3"
+                  ]
               ]
 
     describe "fixture tests" $ do

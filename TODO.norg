@@ -1,7 +1,7 @@
 * Current
   - (x) Parser: *bug* Allow inline comments without space after `#`
   - (x) Allow property keys to start on the line after the `-` of a sequence
-  - ( ) Inline sequence representation `['a', 'b', 'c']`
+  - (x) Inline sequence representation `['a', 'b', 'c']`
   - ( ) Parser: Anchors and aliases
   - ( ) Parser: *bug* Allow sequences to be at the same indentation level as parent
   - ( ) Transform for scalar
