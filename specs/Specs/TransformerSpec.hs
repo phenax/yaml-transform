@@ -10,6 +10,7 @@ import Text.Pretty.Simple (pShowNoColor)
 import YamlTransform.Parser (Yaml (..), parse)
 import YamlTransform.Serializer (serialize)
 import YamlTransform.Transformer (updateKey, updatePath)
+import YamlTransform.Types (YMLScalar (ScalarRawString))
 
 test :: SpecWith ()
 test = do
@@ -17,21 +18,21 @@ test = do
     describe "updateKey" $ do
       context "when yaml doc contains the key" $ do
         let doc =
-              [ YMLMapping "a" [YMLWSSpace, YMLScalar "1"],
+              [ YMLMapping "a" [YMLWSSpace, YMLScalar $ ScalarRawString "1"],
                 YMLNewLine,
-                YMLMapping "b" [YMLWSSpace, YMLScalar "2"],
+                YMLMapping "b" [YMLWSSpace, YMLScalar $ ScalarRawString "2"],
                 YMLNewLine,
-                YMLMapping "c" [YMLWSSpace, YMLScalar "3"]
+                YMLMapping "c" [YMLWSSpace, YMLScalar $ ScalarRawString "3"]
               ]
         it "updates the value of the key" $ do
-          let (found, updated) = updateKey "b" (const [YMLWSSpace, YMLScalar "99"]) doc
+          let (found, updated) = updateKey "b" (const [YMLWSSpace, YMLScalar $ ScalarRawString "99"]) doc
           found `shouldBe` True
           updated
-            `shouldBe` [ YMLMapping "a" [YMLWSSpace, YMLScalar "1"],
+            `shouldBe` [ YMLMapping "a" [YMLWSSpace, YMLScalar $ ScalarRawString "1"],
                          YMLNewLine,
-                         YMLMapping "b" [YMLWSSpace, YMLScalar "99"],
+                         YMLMapping "b" [YMLWSSpace, YMLScalar $ ScalarRawString "99"],
                          YMLNewLine,
-                         YMLMapping "c" [YMLWSSpace, YMLScalar "3"]
+                         YMLMapping "c" [YMLWSSpace, YMLScalar $ ScalarRawString "3"]
                        ]
 
     describe "updatePath" $ do
@@ -52,19 +53,19 @@ test = do
                                 YMLMapping
                                   "d"
                                   [ YMLWSSpace,
-                                    YMLScalar "123"
+                                    YMLScalar $ ScalarRawString "123"
                                   ],
                                 YMLNewLine,
                                 YMLMapping
                                   "e"
                                   [ YMLWSSpace,
-                                    YMLScalar "456"
+                                    YMLScalar $ ScalarRawString "456"
                                   ],
                                 YMLNewLine,
                                 YMLMapping
                                   "f"
                                   [ YMLWSSpace,
-                                    YMLScalar "789"
+                                    YMLScalar $ ScalarRawString "789"
                                   ],
                                 YMLNewLine
                               ]
@@ -72,13 +73,13 @@ test = do
                         YMLMapping
                           "foo"
                           [ YMLWSSpace,
-                            YMLScalar "bar"
+                            YMLScalar $ ScalarRawString "bar"
                           ]
                       ]
                   ]
               ]
         it "updates the value of the key" $ do
-          let updater = const [YMLWSSpace, YMLScalar "999"]
+          let updater = const [YMLWSSpace, YMLScalar $ ScalarRawString "999"]
           let (found, updated) = updatePath ["root", "a", "b", "c", "e"] updater doc
           found `shouldBe` True
           updated
@@ -97,19 +98,19 @@ test = do
                                          YMLMapping
                                            "d"
                                            [ YMLWSSpace,
-                                             YMLScalar "123"
+                                             YMLScalar $ ScalarRawString "123"
                                            ],
                                          YMLNewLine,
                                          YMLMapping
                                            "e"
                                            [ YMLWSSpace,
-                                             YMLScalar "999"
+                                             YMLScalar $ ScalarRawString "999"
                                            ],
                                          YMLNewLine,
                                          YMLMapping
                                            "f"
                                            [ YMLWSSpace,
-                                             YMLScalar "789"
+                                             YMLScalar $ ScalarRawString "789"
                                            ],
                                          YMLNewLine
                                        ]
@@ -117,7 +118,7 @@ test = do
                                  YMLMapping
                                    "foo"
                                    [ YMLWSSpace,
-                                     YMLScalar "bar"
+                                     YMLScalar $ ScalarRawString "bar"
                                    ]
                                ]
                            ]

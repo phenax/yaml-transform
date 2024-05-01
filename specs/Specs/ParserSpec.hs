@@ -11,6 +11,7 @@ import Test.Hspec
 import Test.Hspec.Golden (defaultGolden)
 import Text.Pretty.Simple (pShowNoColor)
 import YamlTransform.Parser (Yaml (..), parse)
+import YamlTransform.Types (YMLScalar (ScalarDoubleQuote, ScalarNumber, ScalarRawString, ScalarSingleQuote))
 
 test :: SpecWith ()
 test = do
@@ -22,7 +23,7 @@ test = do
             [ YMLMapping
                 "-he-llo-"
                 [ YMLWSSpace,
-                  YMLScalar "world"
+                  YMLScalar $ ScalarRawString "world"
                 ]
             ]
         parse "_h_ello_: world"
@@ -30,7 +31,7 @@ test = do
             [ YMLMapping
                 "_h_ello_"
                 [ YMLWSSpace,
-                  YMLScalar "world"
+                  YMLScalar $ ScalarRawString "world"
                 ]
             ]
         parse "$he$llo$: world"
@@ -38,7 +39,7 @@ test = do
             [ YMLMapping
                 "$he$llo$"
                 [ YMLWSSpace,
-                  YMLScalar "world"
+                  YMLScalar $ ScalarRawString "world"
                 ]
             ]
       it "does not allow invalid keys" $ do
@@ -52,7 +53,7 @@ test = do
               [ YMLMapping
                   "hello"
                   [ YMLWSSpace,
-                    YMLScalar "world !@#$%^&()_+-=;':,./<>?"
+                    YMLScalar $ ScalarRawString "world !@#$%^&()_+-=;':,./<>?"
                   ]
               ]
 
@@ -67,12 +68,12 @@ test = do
         it "parses mapping" $ do
           parse "hello: 'world'"
             `shouldBe` Right
-              [YMLMapping "hello" [YMLWSSpace, YMLScalar "world"]]
+              [YMLMapping "hello" [YMLWSSpace, YMLScalar $ ScalarSingleQuote "world"]]
 
         it "parses mapping" $ do
           parse "hello: \"world\""
             `shouldBe` Right
-              [YMLMapping "hello" [YMLWSSpace, YMLScalar "world"]]
+              [YMLMapping "hello" [YMLWSSpace, YMLScalar $ ScalarDoubleQuote "world"]]
 
       context "when given a delimited string crossing multiple lines" $ do
         it "parses mapping" $ do
@@ -87,7 +88,7 @@ test = do
               [ YMLMapping
                   "key"
                   [ YMLWSSpace,
-                    YMLScalar "hello world\n  testing mutliline\n  here"
+                    YMLScalar $ ScalarDoubleQuote "hello world\n  testing mutliline\n  here"
                   ]
               ]
 
@@ -99,7 +100,7 @@ test = do
               [ YMLMapping
                   "hello"
                   [ YMLWSSpace,
-                    YMLScalar "world. This is some value"
+                    YMLScalar $ ScalarRawString "world. This is some value"
                   ]
               ]
 
@@ -114,17 +115,17 @@ test = do
                 |]
           parse input
             `shouldBe` Right
-              [ YMLMapping "hello" [YMLWSSpace, YMLScalar "world"],
+              [ YMLMapping "hello" [YMLWSSpace, YMLScalar $ ScalarRawString "world"],
                 YMLNewLine,
                 YMLMapping
                   "foo"
                   [ YMLNewLine,
                     YMLWSSpace,
                     YMLWSSpace,
-                    YMLMapping "bar" [YMLWSSpace, YMLScalar "is foo"],
+                    YMLMapping "bar" [YMLWSSpace, YMLScalar $ ScalarRawString "is foo"],
                     YMLNewLine
                   ],
-                YMLMapping "another-item" [YMLWSSpace, YMLScalar "123.0"]
+                YMLMapping "another-item" [YMLWSSpace, YMLScalar $ ScalarNumber 123]
               ]
 
       context "when input contains a complex nested mappings" $ do
@@ -176,7 +177,7 @@ test = do
                                 YMLMapping
                                   "d"
                                   [ YMLWSSpace,
-                                    YMLScalar "123.0"
+                                    YMLScalar $ ScalarNumber 123
                                   ],
                                 YMLNewLine,
                                 YMLWSSpace,
@@ -190,7 +191,7 @@ test = do
                                 YMLMapping
                                   "e"
                                   [ YMLWSSpace,
-                                    YMLScalar "456.0"
+                                    YMLScalar $ ScalarNumber 456
                                   ],
                                 YMLNewLine
                               ]
@@ -202,7 +203,7 @@ test = do
                         YMLMapping
                           "foo"
                           [ YMLWSSpace,
-                            YMLScalar "bar"
+                            YMLScalar $ ScalarRawString "bar"
                           ]
                       ]
                   ]
@@ -216,7 +217,7 @@ test = do
               [ YMLMapping
                   "hello"
                   [ YMLWSSpace,
-                    YMLScalar "This is some text",
+                    YMLScalar $ ScalarRawString "This is some text",
                     YMLWSSpace,
                     YMLComment " and then some more text"
                   ]
@@ -238,7 +239,7 @@ test = do
                     YMLNewLine,
                     YMLWSSpace,
                     YMLWSSpace,
-                    YMLMapping "world" [YMLWSSpace, YMLScalar "123.0"]
+                    YMLMapping "world" [YMLWSSpace, YMLScalar $ ScalarNumber 123.0]
                   ]
               ]
 
@@ -249,7 +250,7 @@ test = do
               [ YMLMapping
                   "hello"
                   [ YMLWSSpace,
-                    YMLScalar "This is some text",
+                    YMLScalar $ ScalarRawString "This is some text",
                     YMLWSSpace,
                     YMLComment "and then some more text"
                   ]
@@ -262,7 +263,7 @@ test = do
               [ YMLMapping
                   "hello"
                   [ YMLWSSpace,
-                    YMLScalar "This is some text# and then some more text"
+                    YMLScalar $ ScalarRawString "This is some text# and then some more text"
                   ]
               ]
 
@@ -273,7 +274,7 @@ test = do
               [ YMLMapping
                   "hello"
                   [ YMLWSSpace,
-                    YMLScalar "This is some text",
+                    YMLScalar $ ScalarRawString "This is some text",
                     YMLWSSpace,
                     YMLComment " and # then #some more# text#"
                   ]
@@ -292,11 +293,11 @@ test = do
             `shouldBe` Right
               [ YMLComment " This is a comment",
                 YMLNewLine,
-                YMLMapping "a" [YMLWSSpace, YMLScalar "1.0"],
+                YMLMapping "a" [YMLWSSpace, YMLScalar $ ScalarNumber 1],
                 YMLNewLine,
                 YMLComment " This is another a comment",
                 YMLNewLine,
-                YMLMapping "b" [YMLWSSpace, YMLScalar "2.0"]
+                YMLMapping "b" [YMLWSSpace, YMLScalar $ ScalarNumber 2]
               ]
 
       context "when comments are between nested mappings" $ do
@@ -315,7 +316,7 @@ test = do
                   [ YMLNewLine,
                     YMLWSSpace,
                     YMLWSSpace,
-                    YMLMapping "b" [YMLWSSpace, YMLScalar "1.0"],
+                    YMLMapping "b" [YMLWSSpace, YMLScalar $ ScalarNumber 1],
                     YMLNewLine,
                     YMLWSSpace,
                     YMLWSSpace,
@@ -323,7 +324,7 @@ test = do
                     YMLNewLine,
                     YMLWSSpace,
                     YMLWSSpace,
-                    YMLMapping "c" [YMLWSSpace, YMLScalar "2.0"]
+                    YMLMapping "c" [YMLWSSpace, YMLScalar $ ScalarNumber 2]
                   ]
               ]
 
@@ -352,7 +353,7 @@ test = do
                         YMLWSSpace,
                         YMLWSSpace,
                         YMLWSSpace,
-                        YMLMapping "c" [YMLWSSpace, YMLScalar "2.0"],
+                        YMLMapping "c" [YMLWSSpace, YMLScalar $ ScalarNumber 2],
                         YMLNewLine
                       ],
                     YMLWSSpace,
@@ -361,10 +362,10 @@ test = do
                     YMLNewLine,
                     YMLWSSpace,
                     YMLWSSpace,
-                    YMLMapping "d" [YMLWSSpace, YMLScalar "5.0"],
+                    YMLMapping "d" [YMLWSSpace, YMLScalar $ ScalarNumber 5],
                     YMLNewLine
                   ],
-                YMLMapping "c" [YMLWSSpace, YMLScalar "2.0"]
+                YMLMapping "c" [YMLWSSpace, YMLScalar $ ScalarNumber 2]
               ]
 
     describe "with sequences" $ do
@@ -378,11 +379,11 @@ test = do
             |]
           parse input
             `shouldBe` Right
-              [ YMLSequenceItem [YMLWSSpace, YMLScalar "hello"],
+              [ YMLSequenceItem [YMLWSSpace, YMLScalar $ ScalarRawString "hello"],
                 YMLNewLine,
-                YMLSequenceItem [YMLWSSpace, YMLScalar "world"],
+                YMLSequenceItem [YMLWSSpace, YMLScalar $ ScalarRawString "world"],
                 YMLNewLine,
-                YMLSequenceItem [YMLWSSpace, YMLScalar "123.0"]
+                YMLSequenceItem [YMLWSSpace, YMLScalar $ ScalarNumber 123]
               ]
 
       context "when sequence contains a mapping" $ do
@@ -397,14 +398,14 @@ test = do
             `shouldBe` Right
               [ YMLSequenceItem
                   [ YMLWSSpace,
-                    YMLMapping "hello" [YMLWSSpace, YMLScalar "world"],
+                    YMLMapping "hello" [YMLWSSpace, YMLScalar $ ScalarRawString "world"],
                     YMLNewLine,
                     YMLWSSpace,
                     YMLWSSpace,
-                    YMLMapping "foo" [YMLWSSpace, YMLScalar "bar"],
+                    YMLMapping "foo" [YMLWSSpace, YMLScalar $ ScalarRawString "bar"],
                     YMLNewLine
                   ],
-                YMLSequenceItem [YMLWSSpace, YMLScalar "123.0"]
+                YMLSequenceItem [YMLWSSpace, YMLScalar $ ScalarNumber 123]
               ]
 
       context "when mapping contains a sequence" $ do
@@ -424,21 +425,21 @@ test = do
                   [ YMLNewLine,
                     YMLWSSpace,
                     YMLWSSpace,
-                    YMLSequenceItem [YMLWSSpace, YMLScalar "salad"],
+                    YMLSequenceItem [YMLWSSpace, YMLScalar $ ScalarRawString "salad"],
                     YMLNewLine,
                     YMLWSSpace,
                     YMLWSSpace,
                     YMLSequenceItem
                       [ YMLWSSpace,
-                        YMLMapping "this" [YMLWSSpace, YMLScalar "that"],
+                        YMLMapping "this" [YMLWSSpace, YMLScalar $ ScalarRawString "that"],
                         YMLNewLine
                       ],
                     YMLWSSpace,
                     YMLWSSpace,
-                    YMLSequenceItem [YMLWSSpace, YMLScalar "fries"],
+                    YMLSequenceItem [YMLWSSpace, YMLScalar $ ScalarRawString "fries"],
                     YMLNewLine
                   ],
-                YMLMapping "foo" [YMLWSSpace, YMLScalar "bar"]
+                YMLMapping "foo" [YMLWSSpace, YMLScalar $ ScalarRawString "bar"]
               ]
 
       context "when mapping starts on the line below the start of a sequence" $ do
@@ -453,20 +454,20 @@ test = do
                 |]
           parse input
             `shouldBe` Right
-              [ YMLSequenceItem [YMLWSSpace, YMLScalar "hello"],
+              [ YMLSequenceItem [YMLWSSpace, YMLScalar $ ScalarRawString "hello"],
                 YMLNewLine,
                 YMLSequenceItem
                   [ YMLNewLine,
                     YMLWSSpace,
                     YMLWSSpace,
-                    YMLMapping "key1" [YMLWSSpace, YMLScalar "v1"],
+                    YMLMapping "key1" [YMLWSSpace, YMLScalar $ ScalarRawString "v1"],
                     YMLNewLine,
                     YMLWSSpace,
                     YMLWSSpace,
-                    YMLMapping "key2" [YMLWSSpace, YMLScalar "v2"],
+                    YMLMapping "key2" [YMLWSSpace, YMLScalar $ ScalarRawString "v2"],
                     YMLNewLine
                   ],
-                YMLSequenceItem [YMLWSSpace, YMLScalar "123.0"]
+                YMLSequenceItem [YMLWSSpace, YMLScalar $ ScalarNumber 123]
               ]
 
     describe "with inline sequence" $ do
@@ -478,9 +479,9 @@ test = do
                   "mapping"
                   [ YMLWSSpace,
                     YMLInlineSequence
-                      [ [YMLScalar "hello"],
-                        [YMLWSSpace, YMLScalar "wo,rld"],
-                        [YMLWSSpace, YMLScalar "123.0"]
+                      [ [YMLScalar $ ScalarSingleQuote "hello"],
+                        [YMLWSSpace, YMLScalar $ ScalarSingleQuote "wo,rld"],
+                        [YMLWSSpace, YMLScalar $ ScalarNumber 123]
                       ]
                   ]
               ]
@@ -492,9 +493,9 @@ test = do
               [ YMLSequenceItem
                   [ YMLWSSpace,
                     YMLInlineSequence
-                      [ [YMLScalar "hello"],
-                        [YMLWSSpace, YMLScalar "wo,rld"],
-                        [YMLWSSpace, YMLScalar "123.0"]
+                      [ [YMLScalar $ ScalarSingleQuote "hello"],
+                        [YMLWSSpace, YMLScalar $ ScalarSingleQuote "wo,rld"],
+                        [YMLWSSpace, YMLScalar $ ScalarNumber 123]
                       ]
                   ]
               ]
@@ -520,7 +521,7 @@ test = do
                       "mapping"
                       [ YMLWSSpace,
                         YMLInlineSequence
-                          [ [YMLWSSpace, YMLScalar "hello"],
+                          [ [YMLWSSpace, YMLScalar $ ScalarSingleQuote "hello"],
                             [ YMLNewLine,
                               YMLWSSpace,
                               YMLWSSpace,
@@ -528,9 +529,9 @@ test = do
                               YMLWSSpace,
                               YMLWSSpace,
                               YMLWSSpace,
-                              YMLScalar "wo,rld"
+                              YMLScalar $ ScalarSingleQuote "wo,rld"
                             ],
-                            [YMLNewLine, YMLWSSpace, YMLWSSpace, YMLScalar "123.0", YMLNewLine]
+                            [YMLNewLine, YMLWSSpace, YMLWSSpace, YMLScalar $ ScalarNumber 123, YMLNewLine]
                           ]
                       ]
                   ]
@@ -554,14 +555,14 @@ test = do
                       [ [ YMLNewLine,
                           YMLWSSpace,
                           YMLWSSpace,
-                          YMLScalar "hello"
+                          YMLScalar $ ScalarSingleQuote "hello"
                         ],
                         [ YMLWSSpace,
                           YMLComment " Comment 1",
                           YMLNewLine,
                           YMLWSSpace,
                           YMLWSSpace,
-                          YMLScalar "123.0",
+                          YMLScalar $ ScalarNumber 123,
                           YMLWSSpace,
                           YMLComment " Comment 2",
                           YMLNewLine
@@ -582,7 +583,7 @@ test = do
                   [ YMLWSSpace,
                     YMLAnchor "my-anchor",
                     YMLWSSpace,
-                    YMLScalar "This is some text that follows"
+                    YMLScalar $ ScalarRawString "This is some text that follows"
                   ]
               ]
 
@@ -603,11 +604,11 @@ test = do
                     YMLNewLine,
                     YMLWSSpace,
                     YMLWSSpace,
-                    YMLMapping "foo" [YMLWSSpace, YMLScalar "bar"],
+                    YMLMapping "foo" [YMLWSSpace, YMLScalar $ ScalarRawString "bar"],
                     YMLNewLine,
                     YMLWSSpace,
                     YMLWSSpace,
-                    YMLMapping "items" [YMLWSSpace, YMLScalar "wow"]
+                    YMLMapping "items" [YMLWSSpace, YMLScalar $ ScalarRawString "wow"]
                   ]
               ]
 
@@ -619,7 +620,7 @@ test = do
                   [ YMLWSSpace,
                     YMLAnchor "my-anchor",
                     YMLWSSpace,
-                    YMLScalar "This is some text that follows"
+                    YMLScalar $ ScalarRawString "This is some text that follows"
                   ]
               ]
 
@@ -630,7 +631,7 @@ test = do
             mapping:
               - &anchor-1 123
               - &anchor-2
-                key: value
+                key: "value 1"
               - world
           |]
           parse input
@@ -644,7 +645,7 @@ test = do
                       [ YMLWSSpace,
                         YMLAnchor "anchor-1",
                         YMLWSSpace,
-                        YMLScalar "123.0"
+                        YMLScalar $ ScalarNumber 123
                       ],
                     YMLNewLine,
                     YMLWSSpace,
@@ -657,14 +658,14 @@ test = do
                         YMLWSSpace,
                         YMLWSSpace,
                         YMLWSSpace,
-                        YMLMapping "key" [YMLWSSpace, YMLScalar "value"],
+                        YMLMapping "key" [YMLWSSpace, YMLScalar $ ScalarDoubleQuote "value 1"],
                         YMLNewLine
                       ],
                     YMLWSSpace,
                     YMLWSSpace,
                     YMLSequenceItem
                       [ YMLWSSpace,
-                        YMLScalar "world"
+                        YMLScalar $ ScalarRawString "world"
                       ]
                   ]
               ]
@@ -679,8 +680,8 @@ test = do
                     YMLAnchor "my-anchor",
                     YMLWSSpace,
                     YMLInlineSequence
-                      [ [YMLScalar "1.0"],
-                        [YMLWSSpace, YMLScalar "two"]
+                      [ [YMLScalar $ ScalarNumber 1],
+                        [YMLWSSpace, YMLScalar $ ScalarSingleQuote "two"]
                       ]
                   ]
               ]

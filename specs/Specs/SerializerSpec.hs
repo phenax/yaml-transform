@@ -11,6 +11,7 @@ import Test.Hspec.Golden (defaultGolden)
 import Text.Pretty.Simple (pShowNoColor)
 import YamlTransform.Parser (Yaml (..), parse)
 import YamlTransform.Serializer (serialize)
+import YamlTransform.Types (YMLScalar (..))
 
 test :: SpecWith ()
 test = do
@@ -30,7 +31,7 @@ test = do
                         YMLWSSpace,
                         YMLWSSpace,
                         YMLWSSpace,
-                        YMLMapping "c" [YMLWSSpace, YMLScalar "2"],
+                        YMLMapping "c" [YMLWSSpace, YMLScalar $ ScalarRawString "2"],
                         YMLNewLine
                       ],
                     YMLWSSpace,
@@ -39,10 +40,10 @@ test = do
                     YMLNewLine,
                     YMLWSSpace,
                     YMLWSSpace,
-                    YMLMapping "d" [YMLWSSpace, YMLScalar "5"],
+                    YMLMapping "d" [YMLWSSpace, YMLScalar $ ScalarRawString "5"],
                     YMLNewLine
                   ],
-                YMLMapping "c" [YMLWSSpace, YMLScalar "2"]
+                YMLMapping "c" [YMLWSSpace, YMLScalar $ ScalarRawString "2"]
               ]
         serialize input
           `shouldBe` [text|
@@ -65,14 +66,14 @@ test = do
                         [ [ YMLNewLine,
                             YMLWSSpace,
                             YMLWSSpace,
-                            YMLScalar "hello"
+                            YMLScalar $ ScalarRawString "hello"
                           ],
                           [ YMLWSSpace,
                             YMLComment " Comment 1",
                             YMLNewLine,
                             YMLWSSpace,
                             YMLWSSpace,
-                            YMLScalar "123.0",
+                            YMLScalar $ ScalarRawString "123.0",
                             YMLWSSpace,
                             YMLComment " Comment 2",
                             YMLNewLine
@@ -99,7 +100,7 @@ test = do
                     [ YMLWSSpace,
                       YMLAnchor "some-anchor",
                       YMLWSSpace,
-                      YMLScalar "This text"
+                      YMLScalar $ ScalarRawString "This text"
                     ]
                 ]
           serialize input
@@ -123,12 +124,12 @@ test = do
                           YMLWSSpace,
                           YMLWSSpace,
                           YMLWSSpace,
-                          YMLMapping "one" [YMLWSSpace, YMLScalar "two"]
+                          YMLMapping "one" [YMLWSSpace, YMLScalar $ ScalarRawString "two"]
                         ],
                       YMLNewLine,
                       YMLWSSpace,
                       YMLWSSpace,
-                      YMLSequenceItem [YMLWSSpace, YMLAnchor "another", YMLWSSpace, YMLScalar "More"]
+                      YMLSequenceItem [YMLWSSpace, YMLAnchor "another", YMLWSSpace, YMLScalar $ ScalarRawString "More"]
                     ]
                 ]
           serialize input

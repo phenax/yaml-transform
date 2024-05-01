@@ -8,11 +8,11 @@ import Data.Maybe (fromMaybe, maybeToList)
 import Data.Text (Text)
 import qualified Data.Text as Text
 import qualified YamlTransform.Parser.Util as P
-import YamlTransform.Types (Yaml (..))
+import YamlTransform.Types (YMLScalar (..), Yaml (..))
 
 undelimitedInlineString :: P.Parser Yaml
 undelimitedInlineString =
-  YMLScalar <$> P.takeUntilParsable endOfInlineValue
+  YMLScalar . ScalarRawString <$> P.takeUntilParsable endOfInlineValue
   where
     endOfInlineValue =
       P.choice
@@ -23,12 +23,12 @@ undelimitedInlineString =
         ]
 
 delimitedInlineStringP :: P.Parser Yaml
-delimitedInlineStringP = YMLScalar <$> P.choice [quoted '\'', quoted '"']
+delimitedInlineStringP = YMLScalar <$> P.choice [ScalarSingleQuote <$> quoted '\'', ScalarDoubleQuote <$> quoted '"']
   where
     quoted c = P.char c *> P.takeWhile1 (/= c) <* P.char c
 
 numberP :: P.Parser Yaml
-numberP = YMLScalar . Text.pack . show <$> P.double
+numberP = YMLScalar . ScalarNumber <$> P.double
 
 inlineScalarValueP :: P.Parser Yaml
 inlineScalarValueP = P.choice [delimitedInlineStringP, numberP, undelimitedInlineString]

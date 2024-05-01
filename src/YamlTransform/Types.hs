@@ -2,24 +2,19 @@ module YamlTransform.Types where
 
 import Data.Text (Text)
 
--- data YMLString
---   = StrSingleQuote Text
---   | StrDoubleQuote Text
---   | StrRaw Text
---   deriving (Show, Eq)
---
--- data YMLScalar
---   = YMLString YMLString
---   | YMLInt Int
---   | YMLFloat Float
---   | YMLBool Bool
---   | YMLNull
---   deriving (Show, Eq)
+data YMLScalar
+  = ScalarSingleQuote Text
+  | ScalarDoubleQuote Text
+  | ScalarRawString Text
+  | ScalarNumber Double
+  | ScalarBool Bool
+  | ScalarNull
+  deriving (Show, Eq)
 
 data Yaml
   = YMLMapping Text [Yaml]
   | YMLSequenceItem [Yaml]
-  | YMLScalar Text
+  | YMLScalar YMLScalar
   | YMLInlineSequence [[Yaml]]
   | YMLComment Text
   | YMLWSSpace

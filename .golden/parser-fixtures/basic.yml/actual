@@ -1,7 +1,8 @@
 Right
     [ YMLMapping "version"
         [ YMLWSSpace
-        , YMLScalar "2.1"
+        , YMLScalar
+            ( ScalarNumber 2.1 )
         ]
     , YMLNewLine
     , YMLNewLine
@@ -29,7 +30,8 @@ Right
                     [ YMLWSSpace
                     , YMLMapping "image"
                         [ YMLWSSpace
-                        , YMLScalar "cimg/base:2024.01"
+                        , YMLScalar
+                            ( ScalarRawString "cimg/base:2024.01" )
                         ]
                     , YMLNewLine
                     ]
@@ -50,7 +52,8 @@ Right
             , YMLWSSpace
             , YMLMapping "executor"
                 [ YMLWSSpace
-                , YMLScalar "my-executor"
+                , YMLScalar
+                    ( ScalarRawString "my-executor" )
                 ]
             , YMLNewLine
             , YMLWSSpace
@@ -67,7 +70,8 @@ Right
                 , YMLWSSpace
                 , YMLSequenceItem
                     [ YMLWSSpace
-                    , YMLScalar "checkout"
+                    , YMLScalar
+                        ( ScalarRawString "checkout" )
                     ]
                 , YMLNewLine
                 , YMLWSSpace
@@ -80,7 +84,8 @@ Right
                     [ YMLWSSpace
                     , YMLMapping "run"
                         [ YMLWSSpace
-                        , YMLScalar "echo "build""
+                        , YMLScalar
+                            ( ScalarSingleQuote "echo "build"" )
                         ]
                     , YMLNewLine
                     ]
@@ -96,7 +101,8 @@ Right
             , YMLWSSpace
             , YMLMapping "executor"
                 [ YMLWSSpace
-                , YMLScalar "my-executor"
+                , YMLScalar
+                    ( ScalarRawString "my-executor" )
                 ]
             , YMLNewLine
             , YMLWSSpace
@@ -113,7 +119,8 @@ Right
                 , YMLWSSpace
                 , YMLSequenceItem
                     [ YMLWSSpace
-                    , YMLScalar "checkout"
+                    , YMLScalar
+                        ( ScalarRawString "checkout" )
                     , YMLWSSpace
                     , YMLComment " idontlikey"
                     , YMLNewLine
@@ -128,7 +135,8 @@ Right
                     [ YMLWSSpace
                     , YMLMapping "run"
                         [ YMLWSSpace
-                        , YMLScalar "echo "test""
+                        , YMLScalar
+                            ( ScalarRawString "echo "test"" )
                         , YMLWSSpace
                         , YMLComment " I like this key"
                         , YMLNewLine
@@ -146,7 +154,8 @@ Right
             , YMLWSSpace
             , YMLMapping "executor"
                 [ YMLWSSpace
-                , YMLScalar "my-executor"
+                , YMLScalar
+                    ( ScalarRawString "my-executor" )
                 ]
             , YMLNewLine
             , YMLWSSpace
@@ -163,7 +172,8 @@ Right
                 , YMLWSSpace
                 , YMLSequenceItem
                     [ YMLWSSpace
-                    , YMLScalar "checkout"
+                    , YMLScalar
+                        ( ScalarRawString "checkout" )
                     ]
                 , YMLNewLine
                 , YMLWSSpace
@@ -184,7 +194,8 @@ Right
                     [ YMLWSSpace
                     , YMLMapping "run"
                         [ YMLWSSpace
-                        , YMLScalar "echo "deploy""
+                        , YMLScalar
+                            ( ScalarRawString "echo "deploy"" )
                         ]
                     , YMLNewLine
                     ]
@@ -222,7 +233,8 @@ Right
                 , YMLWSSpace
                 , YMLSequenceItem
                     [ YMLWSSpace
-                    , YMLScalar "build"
+                    , YMLScalar
+                        ( ScalarRawString "build" )
                     ]
                 , YMLNewLine
                 , YMLWSSpace
@@ -246,25 +258,15 @@ Right
                         , YMLWSSpace
                         , YMLWSSpace
                         , YMLMapping "requires"
-                            [ YMLNewLine
-                            , YMLWSSpace
-                            , YMLWSSpace
-                            , YMLWSSpace
-                            , YMLWSSpace
-                            , YMLWSSpace
-                            , YMLWSSpace
-                            , YMLWSSpace
-                            , YMLWSSpace
-                            , YMLWSSpace
-                            , YMLWSSpace
-                            , YMLWSSpace
-                            , YMLWSSpace
-                            , YMLSequenceItem
-                                [ YMLWSSpace
-                                , YMLScalar "build"
+                            [ YMLWSSpace
+                            , YMLInlineSequence
+                                [
+                                    [ YMLScalar
+                                        ( ScalarSingleQuote "build" )
+                                    ]
                                 ]
-                            , YMLNewLine
                             ]
+                        , YMLNewLine
                         ]
                     ]
                 , YMLWSSpace
@@ -289,7 +291,8 @@ Right
                         , YMLWSSpace
                         , YMLMapping "type"
                             [ YMLWSSpace
-                            , YMLScalar "approval"
+                            , YMLScalar
+                                ( ScalarRawString "approval" )
                             ]
                         , YMLNewLine
                         , YMLWSSpace
@@ -318,7 +321,8 @@ Right
                             , YMLWSSpace
                             , YMLSequenceItem
                                 [ YMLWSSpace
-                                , YMLScalar "build"
+                                , YMLScalar
+                                    ( ScalarRawString "build" )
                                 ]
                             , YMLNewLine
                             ]
@@ -360,7 +364,8 @@ Right
                             , YMLWSSpace
                             , YMLSequenceItem
                                 [ YMLWSSpace
-                                , YMLScalar "hold"
+                                , YMLScalar
+                                    ( ScalarRawString "hold" )
                                 ]
                             , YMLNewLine
                             ]

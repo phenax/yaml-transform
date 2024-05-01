@@ -3,21 +3,24 @@
   - (x) Allow property keys to start on the line after the `-` of a sequence
   - (x) Inline sequence representation `['a', 'b', 'c']`
   - (x) Parser: Anchors
+  - (x) numbers?
+  - (x) strings: single/double quoted
+  - (x) Parser: types for scalar values
+  - (x) Fix nix build (test fails because cant load fixture)
   - ( ) Parser: *bug* Allow sequences to be at the same indentation level as parent
   - ( ) Transform for scalar
   - ( ) CLI: Update path in yaml
   - ( ) CLI: Remove key
   - ( ) CLI: Get value
-  - ( ) numbers?
   - ( ) Unquoted string nuances (Problem chars `[]{}:>|` have to be quoted)
-  - ( ) strings: single/double quoted
   - ( ) strings: Folded style `>`
   - ( ) strings: Literal style `\|`
   - ( ) Escaping character
   - ( ) Figure out nuances of keys
   - ( ) Allow quoted keys
-  - ( ) Parser: types for scalar values
-  - (x) Fix nix build (test fails because cant load fixture)
+  - ( ) Scalar Bool
+  - ( ) Scalar Null (`null` | `~`)
+  - ( ) Allow empty value for mapping?
 
 * Later
   - ( ) Support multi-document files with `---` document start marker (& `...` for document end)
