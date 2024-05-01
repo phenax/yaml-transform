@@ -90,6 +90,55 @@ test = do
               ] # Comment 3
             |]
 
+    describe "with anchors" $ do
+      context "when mapping has anchor" $ do
+        it "serializes it correctly" $ do
+          let input =
+                [ YMLMapping
+                    "mapping"
+                    [ YMLWSSpace,
+                      YMLAnchor "some-anchor",
+                      YMLWSSpace,
+                      YMLScalar "This text"
+                    ]
+                ]
+          serialize input
+            `shouldBe` [text|
+              mapping: &some-anchor This text
+            |]
+
+      context "when sequence has anchor" $ do
+        it "serializes it correctly" $ do
+          let input =
+                [ YMLMapping
+                    "mapping"
+                    [ YMLNewLine,
+                      YMLWSSpace,
+                      YMLWSSpace,
+                      YMLSequenceItem
+                        [ YMLWSSpace,
+                          YMLAnchor "some-anchor",
+                          YMLNewLine,
+                          YMLWSSpace,
+                          YMLWSSpace,
+                          YMLWSSpace,
+                          YMLWSSpace,
+                          YMLMapping "one" [YMLWSSpace, YMLScalar "two"]
+                        ],
+                      YMLNewLine,
+                      YMLWSSpace,
+                      YMLWSSpace,
+                      YMLSequenceItem [YMLWSSpace, YMLAnchor "another", YMLWSSpace, YMLScalar "More"]
+                    ]
+                ]
+          serialize input
+            `shouldBe` [text|
+            mapping:
+              - &some-anchor
+                one: two
+              - &another More
+            |]
+
     describe "fixture tests" $ do
       it "basic.yml serializes to original file contents" $ do
         let input = decodeLatin1 $(embedFile "specs/fixtures/basic.yml")

@@ -2,7 +2,7 @@
   - (x) Parser: *bug* Allow inline comments without space after `#`
   - (x) Allow property keys to start on the line after the `-` of a sequence
   - (x) Inline sequence representation `['a', 'b', 'c']`
-  - ( ) Parser: Anchors and aliases
+  - (x) Parser: Anchors
   - ( ) Parser: *bug* Allow sequences to be at the same indentation level as parent
   - ( ) Transform for scalar
   - ( ) CLI: Update path in yaml
@@ -30,6 +30,7 @@
   - ( ) Parser: directives
   - (x) Support extending block with anchors (`<<: *anchor`)
   - ( ) Parser: Type enforce syntax `my-num: !!float 25`
+  - (_) Parser: aliases (not planning on a special thing since it is not relevant for updating value)
 
 * Resources
   - {https://yaml.org/spec/1.2.2/#66-comments}

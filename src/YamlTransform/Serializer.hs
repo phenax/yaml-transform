@@ -12,6 +12,7 @@ tokenToText (YMLMapping k values) = k <> ":" <> serialize values
 tokenToText (YMLSequenceItem values) = "-" <> serialize values
 tokenToText (YMLScalar s) = s
 tokenToText (YMLInlineSequence values) = "[" <> intercalate "," (serialize <$> values) <> "]"
+tokenToText (YMLAnchor s) = "&" <> s
 
 serialize :: [Yaml] -> Text
 serialize = foldr ((<>) . tokenToText) ""
