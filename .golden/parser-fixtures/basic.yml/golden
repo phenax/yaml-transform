@@ -2,7 +2,7 @@ Right
     [ YMLMapping "version"
         [ YMLWSSpace
         , YMLScalar
-            ( ScalarNumber 2.1 )
+            ( ScalarRawString "2.1" )
         ]
     , YMLNewLine
     , YMLNewLine

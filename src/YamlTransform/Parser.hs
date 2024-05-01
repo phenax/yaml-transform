@@ -27,8 +27,18 @@ delimitedInlineStringP = YMLScalar <$> P.choice [ScalarSingleQuote <$> quoted '\
   where
     quoted c = P.char c *> P.takeWhile1 (/= c) <* P.char c
 
+optionalList :: P.Parser [a] -> P.Parser [a]
+optionalList = fmap (fromMaybe []) . optional
+
 numberP :: P.Parser Yaml
-numberP = YMLScalar . ScalarNumber <$> P.double
+numberP = YMLScalar . ScalarRawString . Text.pack <$> doubleP
+  where
+    doubleP =
+      P.concatListP
+        [ optionalList (pure <$> P.satisfy (`elem` ("-+" :: String))),
+          P.many1 P.digit,
+          optionalList (P.concatListP [pure <$> P.char '.', P.many' P.digit])
+        ]
 
 inlineScalarValueP :: P.Parser Yaml
 inlineScalarValueP = P.choice [delimitedInlineStringP, numberP, undelimitedInlineString]

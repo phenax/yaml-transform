@@ -144,3 +144,7 @@ test = do
       it "basic.yml serializes to original file contents" $ do
         let input = decodeLatin1 $(embedFile "specs/fixtures/basic.yml")
         fmap serialize (parse input) `shouldBe` Right input
+
+      it "with-anchors.yml serializes to original file contents" $ do
+        let input = decodeLatin1 $(embedFile "specs/fixtures/with-anchors.yml")
+        fmap serialize (parse input) `shouldBe` Right input

@@ -1,0 +1,235 @@
+Right
+    [ YMLComment " Example YAML file with anchors, aliases, and comments"
+    , YMLNewLine
+    , YMLNewLine
+    , YMLComment " Define some common settings"
+    , YMLNewLine
+    , YMLMapping "common_settings"
+        [ YMLWSSpace
+        , YMLAnchor "common_settings"
+        , YMLNewLine
+        , YMLWSSpace
+        , YMLWSSpace
+        , YMLMapping "timeout"
+            [ YMLWSSpace
+            , YMLAnchor "timeout"
+            , YMLWSSpace
+            , YMLScalar
+                ( ScalarRawString "30" )
+            ]
+        , YMLNewLine
+        , YMLWSSpace
+        , YMLWSSpace
+        , YMLMapping "retries"
+            [ YMLWSSpace
+            , YMLScalar
+                ( ScalarRawString "3" )
+            ]
+        , YMLNewLine
+        , YMLNewLine
+        ]
+    , YMLComment " Define settings for different environments"
+    , YMLNewLine
+    , YMLMapping "production"
+        [ YMLNewLine
+        , YMLWSSpace
+        , YMLWSSpace
+        , YMLMapping "<<"
+            [ YMLWSSpace
+            , YMLScalar
+                ( ScalarRawString "*common_settings" )
+            ]
+        , YMLNewLine
+        , YMLWSSpace
+        , YMLWSSpace
+        , YMLMapping "server"
+            [ YMLWSSpace
+            , YMLScalar
+                ( ScalarRawString "example.com" )
+            ]
+        , YMLNewLine
+        , YMLWSSpace
+        , YMLWSSpace
+        , YMLMapping "port"
+            [ YMLWSSpace
+            , YMLScalar
+                ( ScalarRawString "443" )
+            ]
+        , YMLNewLine
+        , YMLWSSpace
+        , YMLWSSpace
+        , YMLComment " Database configuration"
+        , YMLNewLine
+        , YMLWSSpace
+        , YMLWSSpace
+        , YMLMapping "database"
+            [ YMLNewLine
+            , YMLWSSpace
+            , YMLWSSpace
+            , YMLWSSpace
+            , YMLWSSpace
+            , YMLMapping "name"
+                [ YMLWSSpace
+                , YMLScalar
+                    ( ScalarRawString "prod_db" )
+                ]
+            , YMLNewLine
+            , YMLWSSpace
+            , YMLWSSpace
+            , YMLWSSpace
+            , YMLWSSpace
+            , YMLMapping "username"
+                [ YMLWSSpace
+                , YMLScalar
+                    ( ScalarRawString "prod_user" )
+                ]
+            , YMLNewLine
+            , YMLWSSpace
+            , YMLWSSpace
+            , YMLWSSpace
+            , YMLWSSpace
+            , YMLMapping "password"
+                [ YMLWSSpace
+                , YMLScalar
+                    ( ScalarRawString "prod_password" )
+                ]
+            , YMLNewLine
+            , YMLNewLine
+            ]
+        ]
+    , YMLMapping "staging"
+        [ YMLNewLine
+        , YMLWSSpace
+        , YMLWSSpace
+        , YMLMapping "<<"
+            [ YMLWSSpace
+            , YMLScalar
+                ( ScalarRawString "*common_settings" )
+            ]
+        , YMLNewLine
+        , YMLWSSpace
+        , YMLWSSpace
+        , YMLMapping "server"
+            [ YMLWSSpace
+            , YMLScalar
+                ( ScalarRawString "staging.example.com" )
+            ]
+        , YMLNewLine
+        , YMLWSSpace
+        , YMLWSSpace
+        , YMLMapping "port"
+            [ YMLWSSpace
+            , YMLScalar
+                ( ScalarRawString "8443" )
+            , YMLWSSpace
+            , YMLComment " Porty port"
+            , YMLNewLine
+            ]
+        , YMLWSSpace
+        , YMLWSSpace
+        , YMLMapping "database"
+            [ YMLNewLine
+            , YMLWSSpace
+            , YMLWSSpace
+            , YMLWSSpace
+            , YMLWSSpace
+            , YMLMapping "name"
+                [ YMLWSSpace
+                , YMLScalar
+                    ( ScalarRawString "staging_db" )
+                ]
+            , YMLNewLine
+            , YMLWSSpace
+            , YMLWSSpace
+            , YMLWSSpace
+            , YMLWSSpace
+            , YMLMapping "username"
+                [ YMLWSSpace
+                , YMLScalar
+                    ( ScalarSingleQuote "staging_user" )
+                ]
+            , YMLNewLine
+            , YMLWSSpace
+            , YMLWSSpace
+            , YMLWSSpace
+            , YMLWSSpace
+            , YMLMapping "password"
+                [ YMLWSSpace
+                , YMLScalar
+                    ( ScalarRawString "staging_password" )
+                ]
+            , YMLNewLine
+            , YMLWSSpace
+            , YMLWSSpace
+            , YMLWSSpace
+            , YMLWSSpace
+            , YMLMapping "timeout"
+                [ YMLWSSpace
+                , YMLScalar
+                    ( ScalarRawString "*timeout" )
+                ]
+            , YMLNewLine
+            , YMLNewLine
+            ]
+        ]
+    , YMLMapping "development"
+        [ YMLWSSpace
+        , YMLAnchor "common_settings"
+        , YMLNewLine
+        , YMLWSSpace
+        , YMLWSSpace
+        , YMLMapping "server"
+            [ YMLWSSpace
+            , YMLScalar
+                ( ScalarRawString "localhost" )
+            ]
+        , YMLNewLine
+        , YMLWSSpace
+        , YMLWSSpace
+        , YMLMapping "port"
+            [ YMLWSSpace
+            , YMLScalar
+                ( ScalarRawString "8080" )
+            ]
+        , YMLNewLine
+        , YMLWSSpace
+        , YMLWSSpace
+        , YMLComment " Database configuration"
+        , YMLNewLine
+        , YMLWSSpace
+        , YMLWSSpace
+        , YMLMapping "database"
+            [ YMLNewLine
+            , YMLWSSpace
+            , YMLWSSpace
+            , YMLWSSpace
+            , YMLWSSpace
+            , YMLMapping "name"
+                [ YMLWSSpace
+                , YMLScalar
+                    ( ScalarRawString "dev_db" )
+                ]
+            , YMLNewLine
+            , YMLWSSpace
+            , YMLWSSpace
+            , YMLWSSpace
+            , YMLWSSpace
+            , YMLMapping "username"
+                [ YMLWSSpace
+                , YMLScalar
+                    ( ScalarRawString "dev_user" )
+                ]
+            , YMLNewLine
+            , YMLWSSpace
+            , YMLWSSpace
+            , YMLWSSpace
+            , YMLWSSpace
+            , YMLMapping "password"
+                [ YMLWSSpace
+                , YMLScalar
+                    ( ScalarRawString "dev_password" )
+                ]
+            , YMLNewLine
+            ]
+        ]
+    ]

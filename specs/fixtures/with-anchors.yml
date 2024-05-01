@@ -1,0 +1,36 @@
+# Example YAML file with anchors, aliases, and comments
+
+# Define some common settings
+common_settings: &common_settings
+  timeout: &timeout 30
+  retries: 3
+
+# Define settings for different environments
+production:
+  <<: *common_settings
+  server: example.com
+  port: 443
+  # Database configuration
+  database:
+    name: prod_db
+    username: prod_user
+    password: prod_password
+
+staging:
+  <<: *common_settings
+  server: staging.example.com
+  port: 8443 # Porty port
+  database:
+    name: staging_db
+    username: 'staging_user'
+    password: staging_password
+    timeout: *timeout
+
+development: &common_settings
+  server: localhost
+  port: 8080
+  # Database configuration
+  database:
+    name: dev_db
+    username: dev_user
+    password: dev_password

@@ -11,7 +11,7 @@ import Test.Hspec
 import Test.Hspec.Golden (defaultGolden)
 import Text.Pretty.Simple (pShowNoColor)
 import YamlTransform.Parser (Yaml (..), parse)
-import YamlTransform.Types (YMLScalar (ScalarDoubleQuote, ScalarNumber, ScalarRawString, ScalarSingleQuote))
+import YamlTransform.Types (YMLScalar (ScalarDoubleQuote, ScalarRawString, ScalarSingleQuote))
 
 test :: SpecWith ()
 test = do
@@ -125,7 +125,7 @@ test = do
                     YMLMapping "bar" [YMLWSSpace, YMLScalar $ ScalarRawString "is foo"],
                     YMLNewLine
                   ],
-                YMLMapping "another-item" [YMLWSSpace, YMLScalar $ ScalarNumber 123]
+                YMLMapping "another-item" [YMLWSSpace, YMLScalar $ ScalarRawString "123"]
               ]
 
       context "when input contains a complex nested mappings" $ do
@@ -136,7 +136,7 @@ test = do
                   a:
                     b:
                       c:
-                        d: 123
+                        d: 123.0
                         e: 456
                     foo: bar
                 |]
@@ -177,7 +177,7 @@ test = do
                                 YMLMapping
                                   "d"
                                   [ YMLWSSpace,
-                                    YMLScalar $ ScalarNumber 123
+                                    YMLScalar $ ScalarRawString "123.0"
                                   ],
                                 YMLNewLine,
                                 YMLWSSpace,
@@ -191,7 +191,7 @@ test = do
                                 YMLMapping
                                   "e"
                                   [ YMLWSSpace,
-                                    YMLScalar $ ScalarNumber 456
+                                    YMLScalar $ ScalarRawString "456"
                                   ],
                                 YMLNewLine
                               ]
@@ -239,7 +239,7 @@ test = do
                     YMLNewLine,
                     YMLWSSpace,
                     YMLWSSpace,
-                    YMLMapping "world" [YMLWSSpace, YMLScalar $ ScalarNumber 123.0]
+                    YMLMapping "world" [YMLWSSpace, YMLScalar $ ScalarRawString "123"]
                   ]
               ]
 
@@ -293,11 +293,11 @@ test = do
             `shouldBe` Right
               [ YMLComment " This is a comment",
                 YMLNewLine,
-                YMLMapping "a" [YMLWSSpace, YMLScalar $ ScalarNumber 1],
+                YMLMapping "a" [YMLWSSpace, YMLScalar $ ScalarRawString "1"],
                 YMLNewLine,
                 YMLComment " This is another a comment",
                 YMLNewLine,
-                YMLMapping "b" [YMLWSSpace, YMLScalar $ ScalarNumber 2]
+                YMLMapping "b" [YMLWSSpace, YMLScalar $ ScalarRawString "2"]
               ]
 
       context "when comments are between nested mappings" $ do
@@ -316,7 +316,7 @@ test = do
                   [ YMLNewLine,
                     YMLWSSpace,
                     YMLWSSpace,
-                    YMLMapping "b" [YMLWSSpace, YMLScalar $ ScalarNumber 1],
+                    YMLMapping "b" [YMLWSSpace, YMLScalar $ ScalarRawString "1"],
                     YMLNewLine,
                     YMLWSSpace,
                     YMLWSSpace,
@@ -324,7 +324,7 @@ test = do
                     YMLNewLine,
                     YMLWSSpace,
                     YMLWSSpace,
-                    YMLMapping "c" [YMLWSSpace, YMLScalar $ ScalarNumber 2]
+                    YMLMapping "c" [YMLWSSpace, YMLScalar $ ScalarRawString "2"]
                   ]
               ]
 
@@ -353,7 +353,7 @@ test = do
                         YMLWSSpace,
                         YMLWSSpace,
                         YMLWSSpace,
-                        YMLMapping "c" [YMLWSSpace, YMLScalar $ ScalarNumber 2],
+                        YMLMapping "c" [YMLWSSpace, YMLScalar $ ScalarRawString "2"],
                         YMLNewLine
                       ],
                     YMLWSSpace,
@@ -362,10 +362,10 @@ test = do
                     YMLNewLine,
                     YMLWSSpace,
                     YMLWSSpace,
-                    YMLMapping "d" [YMLWSSpace, YMLScalar $ ScalarNumber 5],
+                    YMLMapping "d" [YMLWSSpace, YMLScalar $ ScalarRawString "5"],
                     YMLNewLine
                   ],
-                YMLMapping "c" [YMLWSSpace, YMLScalar $ ScalarNumber 2]
+                YMLMapping "c" [YMLWSSpace, YMLScalar $ ScalarRawString "2"]
               ]
 
     describe "with sequences" $ do
@@ -383,7 +383,7 @@ test = do
                 YMLNewLine,
                 YMLSequenceItem [YMLWSSpace, YMLScalar $ ScalarRawString "world"],
                 YMLNewLine,
-                YMLSequenceItem [YMLWSSpace, YMLScalar $ ScalarNumber 123]
+                YMLSequenceItem [YMLWSSpace, YMLScalar $ ScalarRawString "123"]
               ]
 
       context "when sequence contains a mapping" $ do
@@ -405,7 +405,7 @@ test = do
                     YMLMapping "foo" [YMLWSSpace, YMLScalar $ ScalarRawString "bar"],
                     YMLNewLine
                   ],
-                YMLSequenceItem [YMLWSSpace, YMLScalar $ ScalarNumber 123]
+                YMLSequenceItem [YMLWSSpace, YMLScalar $ ScalarRawString "123"]
               ]
 
       context "when mapping contains a sequence" $ do
@@ -467,7 +467,7 @@ test = do
                     YMLMapping "key2" [YMLWSSpace, YMLScalar $ ScalarRawString "v2"],
                     YMLNewLine
                   ],
-                YMLSequenceItem [YMLWSSpace, YMLScalar $ ScalarNumber 123]
+                YMLSequenceItem [YMLWSSpace, YMLScalar $ ScalarRawString "123"]
               ]
 
     describe "with inline sequence" $ do
@@ -481,7 +481,7 @@ test = do
                     YMLInlineSequence
                       [ [YMLScalar $ ScalarSingleQuote "hello"],
                         [YMLWSSpace, YMLScalar $ ScalarSingleQuote "wo,rld"],
-                        [YMLWSSpace, YMLScalar $ ScalarNumber 123]
+                        [YMLWSSpace, YMLScalar $ ScalarRawString "123"]
                       ]
                   ]
               ]
@@ -495,7 +495,7 @@ test = do
                     YMLInlineSequence
                       [ [YMLScalar $ ScalarSingleQuote "hello"],
                         [YMLWSSpace, YMLScalar $ ScalarSingleQuote "wo,rld"],
-                        [YMLWSSpace, YMLScalar $ ScalarNumber 123]
+                        [YMLWSSpace, YMLScalar $ ScalarRawString "123"]
                       ]
                   ]
               ]
@@ -531,7 +531,7 @@ test = do
                               YMLWSSpace,
                               YMLScalar $ ScalarSingleQuote "wo,rld"
                             ],
-                            [YMLNewLine, YMLWSSpace, YMLWSSpace, YMLScalar $ ScalarNumber 123, YMLNewLine]
+                            [YMLNewLine, YMLWSSpace, YMLWSSpace, YMLScalar $ ScalarRawString "123", YMLNewLine]
                           ]
                       ]
                   ]
@@ -562,7 +562,7 @@ test = do
                           YMLNewLine,
                           YMLWSSpace,
                           YMLWSSpace,
-                          YMLScalar $ ScalarNumber 123,
+                          YMLScalar $ ScalarRawString "123",
                           YMLWSSpace,
                           YMLComment " Comment 2",
                           YMLNewLine
@@ -645,7 +645,7 @@ test = do
                       [ YMLWSSpace,
                         YMLAnchor "anchor-1",
                         YMLWSSpace,
-                        YMLScalar $ ScalarNumber 123
+                        YMLScalar $ ScalarRawString "123"
                       ],
                     YMLNewLine,
                     YMLWSSpace,
@@ -680,7 +680,7 @@ test = do
                     YMLAnchor "my-anchor",
                     YMLWSSpace,
                     YMLInlineSequence
-                      [ [YMLScalar $ ScalarNumber 1],
+                      [ [YMLScalar $ ScalarRawString "1"],
                         [YMLWSSpace, YMLScalar $ ScalarSingleQuote "two"]
                       ]
                   ]
@@ -693,3 +693,8 @@ test = do
         it "parses correctly" $ do
           let input = decodeLatin1 $(embedFile "specs/fixtures/basic.yml")
           defaultGolden "parser-fixtures/basic.yml" . toGolden . parse $ input
+
+      describe "with-anchors.yml" $ do
+        it "parses correctly" $ do
+          let input = decodeLatin1 $(embedFile "specs/fixtures/with-anchors.yml")
+          defaultGolden "parser-fixtures/with-anchors.yml" . toGolden . parse $ input

@@ -6,9 +6,6 @@ data YMLScalar
   = ScalarSingleQuote Text
   | ScalarDoubleQuote Text
   | ScalarRawString Text
-  | ScalarNumber Double
-  | ScalarBool Bool
-  | ScalarNull
   deriving (Show, Eq)
 
 data Yaml
