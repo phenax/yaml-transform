@@ -49,7 +49,18 @@ inlineYmlValueP :: P.Parser [Yaml]
 inlineYmlValueP = pure <$> P.choice [inlineSequenceP, inlineScalarValueP]
 
 identifierP :: P.Parser Text
-identifierP = P.choice [P.string "<<", P.takeWhile1 (P.inClass "a-zA-Z0-9-_$")]
+identifierP = P.choice [extendAnchorP, P.takeWhile1 (P.inClass "a-zA-Z0-9-_$")]
+  where
+    extendAnchorP = P.string "<<"
+
+anchorP :: P.Parser [Yaml]
+anchorP = do
+  P.char '&' *> anchorNameP
+  where
+    anchorNameP = pure . YMLAnchor <$> identifierP
+
+optionalAnchorP :: P.Parser [Yaml]
+optionalAnchorP = fromMaybe [] <$> optional (P.concatListP [P.many' whitespaceP, anchorP])
 
 indentCheckP :: Int -> Bool -> P.Parser [Yaml]
 indentCheckP parentIndent allowSameLevel = do
@@ -66,7 +77,7 @@ mappingP parentIndent prefixIndent = do
   key <- identifierP <* P.char ':'
   (whitespaces ++) . pure . YMLMapping key <$> valueP indent
   where
-    valueP indent = P.choice [objectValueP indent, inlineValueP]
+    valueP indent = P.concatListP [optionalAnchorP, P.choice [objectValueP indent, inlineValueP]]
     objectValueP indent = P.concatListP [endOfLineIgnorableP, yamlP indent 0]
     inlineValueP = P.concatListP [P.many1 whitespaceP, inlineYmlValueP, inlineEndP]
     inlineEndP = fromMaybe [] <$> optional (P.lookAhead whitespaceP *> endOfLineIgnorableP)
@@ -75,7 +86,7 @@ sequenceItemP :: Int -> P.Parser [Yaml]
 sequenceItemP parentIndent = do
   whitespaces <- indentCheckP parentIndent False
   let indent = length whitespaces
-  values <- P.char '-' *> P.choice [yamlP indent indent, inlineValueP]
+  values <- P.char '-' *> P.concatListP [optionalAnchorP, P.choice [yamlP indent indent, inlineValueP]]
   pure $ whitespaces ++ [YMLSequenceItem values]
   where
     inlineValueP = P.concatListP [P.many1 whitespaceP, inlineYmlValueP, inlineEndP]
@@ -85,7 +96,7 @@ newlineP :: P.Parser Yaml
 newlineP = YMLNewLine <$ P.endOfLine
 
 indentWhitespaceP :: P.Parser Yaml
-indentWhitespaceP = YMLWSSpace <$ P.space
+indentWhitespaceP = YMLWSSpace <$ P.char ' '
 
 whitespaceP :: P.Parser Yaml
 whitespaceP =

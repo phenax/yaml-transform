@@ -572,6 +572,119 @@ test = do
                   ]
               ]
 
+    describe "with anchors" $ do
+      context "when there is an achor on a mapping with scalar" $ do
+        it "parses anchor" $ do
+          parse "mapping: &my-anchor This is some text that follows"
+            `shouldBe` Right
+              [ YMLMapping
+                  "mapping"
+                  [ YMLWSSpace,
+                    YMLAnchor "my-anchor",
+                    YMLWSSpace,
+                    YMLScalar "This is some text that follows"
+                  ]
+              ]
+
+      context "when there is an achor on a nested mapping" $ do
+        it "parses anchor" $ do
+          let input =
+                [text|
+            mapping: &my-anchor
+              foo: bar
+              items: wow
+          |]
+          parse input
+            `shouldBe` Right
+              [ YMLMapping
+                  "mapping"
+                  [ YMLWSSpace,
+                    YMLAnchor "my-anchor",
+                    YMLNewLine,
+                    YMLWSSpace,
+                    YMLWSSpace,
+                    YMLMapping "foo" [YMLWSSpace, YMLScalar "bar"],
+                    YMLNewLine,
+                    YMLWSSpace,
+                    YMLWSSpace,
+                    YMLMapping "items" [YMLWSSpace, YMLScalar "wow"]
+                  ]
+              ]
+
+      context "when there is an achor on a sequence" $ do
+        it "parses anchor" $ do
+          parse "- &my-anchor This is some text that follows"
+            `shouldBe` Right
+              [ YMLSequenceItem
+                  [ YMLWSSpace,
+                    YMLAnchor "my-anchor",
+                    YMLWSSpace,
+                    YMLScalar "This is some text that follows"
+                  ]
+              ]
+
+      context "when there is an achor on a sequence inside a mapping" $ do
+        it "parses anchor" $ do
+          let input =
+                [text|
+            mapping:
+              - &anchor-1 123
+              - &anchor-2
+                key: value
+              - world
+          |]
+          parse input
+            `shouldBe` Right
+              [ YMLMapping
+                  "mapping"
+                  [ YMLNewLine,
+                    YMLWSSpace,
+                    YMLWSSpace,
+                    YMLSequenceItem
+                      [ YMLWSSpace,
+                        YMLAnchor "anchor-1",
+                        YMLWSSpace,
+                        YMLScalar "123.0"
+                      ],
+                    YMLNewLine,
+                    YMLWSSpace,
+                    YMLWSSpace,
+                    YMLSequenceItem
+                      [ YMLWSSpace,
+                        YMLAnchor "anchor-2",
+                        YMLNewLine,
+                        YMLWSSpace,
+                        YMLWSSpace,
+                        YMLWSSpace,
+                        YMLWSSpace,
+                        YMLMapping "key" [YMLWSSpace, YMLScalar "value"],
+                        YMLNewLine
+                      ],
+                    YMLWSSpace,
+                    YMLWSSpace,
+                    YMLSequenceItem
+                      [ YMLWSSpace,
+                        YMLScalar "world"
+                      ]
+                  ]
+              ]
+
+      context "when there is an achor on an inline sequence" $ do
+        it "parses anchor" $ do
+          parse "mapping: &my-anchor [1, 'two']"
+            `shouldBe` Right
+              [ YMLMapping
+                  "mapping"
+                  [ YMLWSSpace,
+                    YMLAnchor "my-anchor",
+                    YMLWSSpace,
+                    YMLInlineSequence
+                      [ [YMLScalar "1.0"],
+                        [YMLWSSpace, YMLScalar "two"]
+                      ]
+                  ]
+              ]
+
     describe "fixture tests" $ do
       let toGolden = LazyText.unpack . pShowNoColor
 

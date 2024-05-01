@@ -21,9 +21,9 @@ data Yaml
   | YMLSequenceItem [Yaml]
   | YMLScalar Text
   | YMLInlineSequence [[Yaml]]
-  | -- | YMLAlias Text -- TODO: Alias
-    YMLComment Text
+  | YMLComment Text
   | YMLWSSpace
   | YMLWSTab
   | YMLNewLine
+  | YMLAnchor Text
   deriving (Show, Eq)
