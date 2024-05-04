@@ -1,7 +1,7 @@
-module YamlTransform.Transformer (updateKey, updatePath) where
+module YamlTransform.Transformer (updateKey, updatePath, updateScalarAtPath) where
 
 import Data.Text (Text)
-import YamlTransform.Types (Yaml (..))
+import YamlTransform.Types (YMLScalar, Yaml (..))
 
 updatePath :: [Text] -> ([Yaml] -> [Yaml]) -> [Yaml] -> (Bool, [Yaml])
 updatePath [] _ ymls = (False, ymls)
@@ -18,3 +18,9 @@ updateKey key updater ((YMLMapping k values) : ymls)
 updateKey key updater (yml : ymls) = (found, yml : updated)
   where
     (found, updated) = updateKey key updater ymls
+
+updateScalarAtPath :: [Text] -> (YMLScalar -> YMLScalar) -> [Yaml] -> (Bool, [Yaml])
+updateScalarAtPath path updater = updatePath path (map mapScalarNode)
+  where
+    mapScalarNode (YMLScalar scalar) = YMLScalar $ updater scalar
+    mapScalarNode n = n

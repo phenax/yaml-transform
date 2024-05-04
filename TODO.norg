@@ -8,7 +8,7 @@
   - (x) Parser: types for scalar values
   - (x) Fix nix build (test fails because cant load fixture)
   - ( ) Parser: *bug* Allow sequences to be at the same indentation level as parent
-  - ( ) Transform for scalar
+  - (x) Transform for scalar
   - ( ) CLI: Update path in yaml
   - ( ) CLI: Remove key
   - ( ) CLI: Get value
