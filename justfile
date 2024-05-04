@@ -1,6 +1,9 @@
 default:
   @just --choose
 
+run *args:
+  cabal run yaml-transform -- {{args}}
+
 test:
   cabal test
 

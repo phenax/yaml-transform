@@ -26,9 +26,9 @@ test = do
 
       context "when yaml doc contains the key" $ do
         it "updates the value of the key" $ do
-          let (found, updated) = updateKey "b" (const [YMLWSSpace, YMLScalar $ ScalarRawString "99"]) doc
-          found `shouldBe` True
-          updated
+          let (isUpdated, newDoc) = updateKey "b" (const [YMLWSSpace, YMLScalar $ ScalarRawString "99"]) doc
+          isUpdated `shouldBe` True
+          newDoc
             `shouldBe` [ YMLMapping "a" [YMLWSSpace, YMLScalar $ ScalarRawString "1"],
                          YMLNewLine,
                          YMLMapping "b" [YMLWSSpace, YMLScalar $ ScalarRawString "99"],
@@ -37,10 +37,19 @@ test = do
                        ]
 
       context "when yaml doc does not contains the key" $ do
-        it "does not update anything" $ do
-          let (found, updated) = updateKey "z" (const [YMLWSSpace, YMLScalar $ ScalarRawString "99"]) doc
-          found `shouldBe` False
-          updated `shouldBe` doc
+        it "inserts new mapping" $ do
+          let (isUpdated, newDoc) = updateKey "z" (const [YMLWSSpace, YMLScalar $ ScalarRawString "99"]) doc
+          isUpdated `shouldBe` False
+          newDoc
+            `shouldBe` [ YMLMapping "a" [YMLWSSpace, YMLScalar $ ScalarRawString "1"],
+                         YMLNewLine,
+                         YMLMapping "b" [YMLWSSpace, YMLScalar $ ScalarRawString "2"],
+                         YMLNewLine,
+                         YMLMapping "c" [YMLWSSpace, YMLScalar $ ScalarRawString "3"],
+                         YMLNewLine,
+                         YMLMapping "z" [YMLWSSpace, YMLScalar $ ScalarRawString "99"],
+                         YMLNewLine
+                       ]
 
     describe "updatePath" $ do
       let doc =
@@ -56,31 +65,15 @@ test = do
                           YMLMapping
                             "c"
                             [ YMLNewLine,
-                              YMLMapping
-                                "d"
-                                [ YMLWSSpace,
-                                  YMLScalar $ ScalarRawString "123"
-                                ],
+                              YMLMapping "d" [YMLWSSpace, YMLScalar $ ScalarRawString "123"],
                               YMLNewLine,
-                              YMLMapping
-                                "e"
-                                [ YMLWSSpace,
-                                  YMLScalar $ ScalarRawString "456"
-                                ],
+                              YMLMapping "e" [YMLWSSpace, YMLScalar $ ScalarRawString "456"],
                               YMLNewLine,
-                              YMLMapping
-                                "f"
-                                [ YMLWSSpace,
-                                  YMLScalar $ ScalarRawString "789"
-                                ],
+                              YMLMapping "f" [YMLWSSpace, YMLScalar $ ScalarRawString "789"],
                               YMLNewLine
                             ]
                         ],
-                      YMLMapping
-                        "foo"
-                        [ YMLWSSpace,
-                          YMLScalar $ ScalarRawString "bar"
-                        ]
+                      YMLMapping "foo" [YMLWSSpace, YMLScalar $ ScalarRawString "bar"]
                     ]
                 ]
             ]
@@ -88,9 +81,9 @@ test = do
       context "when yaml doc contains the path" $ do
         it "updates the value at the path" $ do
           let updater = const [YMLWSSpace, YMLScalar $ ScalarRawString "999"]
-          let (found, updated) = updatePath ["root", "a", "b", "c", "e"] updater doc
-          found `shouldBe` True
-          updated
+          let (isUpdated, newDoc) = updatePath ["root", "a", "b", "c", "e"] updater doc
+          isUpdated `shouldBe` True
+          newDoc
             `shouldBe` [ YMLMapping
                            "root"
                            [ YMLNewLine,
@@ -103,46 +96,89 @@ test = do
                                      YMLMapping
                                        "c"
                                        [ YMLNewLine,
-                                         YMLMapping
-                                           "d"
-                                           [ YMLWSSpace,
-                                             YMLScalar $ ScalarRawString "123"
-                                           ],
+                                         YMLMapping "d" [YMLWSSpace, YMLScalar $ ScalarRawString "123"],
                                          YMLNewLine,
-                                         YMLMapping
-                                           "e"
-                                           [ YMLWSSpace,
-                                             YMLScalar $ ScalarRawString "999"
-                                           ],
+                                         YMLMapping "e" [YMLWSSpace, YMLScalar $ ScalarRawString "999"],
                                          YMLNewLine,
-                                         YMLMapping
-                                           "f"
-                                           [ YMLWSSpace,
-                                             YMLScalar $ ScalarRawString "789"
-                                           ],
+                                         YMLMapping "f" [YMLWSSpace, YMLScalar $ ScalarRawString "789"],
                                          YMLNewLine
                                        ]
                                    ],
-                                 YMLMapping
-                                   "foo"
-                                   [ YMLWSSpace,
-                                     YMLScalar $ ScalarRawString "bar"
-                                   ]
+                                 YMLMapping "foo" [YMLWSSpace, YMLScalar $ ScalarRawString "bar"]
                                ]
                            ]
                        ]
 
       context "when yaml doc does not contains the path" $ do
-        it "does not update anything" $ do
+        it "inserts new mapping" $ do
           let updater = const [YMLWSSpace, YMLScalar $ ScalarRawString "999"]
-          let (found, updated) = updatePath ["root", "a", "b", "c", "coocoo"] updater doc
-          found `shouldBe` True
-          updated `shouldBe` doc
-        it "does not update anything" $ do
+          let (isUpdated, newDoc) = updatePath ["root", "a", "b", "c", "coocoo"] updater doc
+          isUpdated `shouldBe` True
+          newDoc
+            `shouldBe` [ YMLMapping
+                           "root"
+                           [ YMLNewLine,
+                             YMLMapping
+                               "a"
+                               [ YMLNewLine,
+                                 YMLMapping
+                                   "b"
+                                   [ YMLNewLine,
+                                     YMLMapping
+                                       "c"
+                                       [ YMLNewLine,
+                                         YMLMapping "d" [YMLWSSpace, YMLScalar $ ScalarRawString "123"],
+                                         YMLNewLine,
+                                         YMLMapping "e" [YMLWSSpace, YMLScalar $ ScalarRawString "456"],
+                                         YMLNewLine,
+                                         YMLMapping "f" [YMLWSSpace, YMLScalar $ ScalarRawString "789"],
+                                         YMLNewLine,
+                                         YMLMapping "coocoo" [YMLWSSpace, YMLScalar $ ScalarRawString "999"],
+                                         YMLNewLine
+                                       ]
+                                   ],
+                                 YMLMapping "foo" [YMLWSSpace, YMLScalar $ ScalarRawString "bar"]
+                               ]
+                           ]
+                       ]
+
+        it "inserts new mapping" $ do
           let updater = const [YMLWSSpace, YMLScalar $ ScalarRawString "999"]
-          let (found, updated) = updatePath ["root", "a", "b", "coocoo", "e"] updater doc
-          found `shouldBe` True
-          updated `shouldBe` doc
+          let (isUpdated, newDoc) = updatePath ["root", "a", "b", "coocoo", "e"] updater doc
+          isUpdated `shouldBe` True
+          newDoc
+            `shouldBe` [ YMLMapping
+                           "root"
+                           [ YMLNewLine,
+                             YMLMapping
+                               "a"
+                               [ YMLNewLine,
+                                 YMLMapping
+                                   "b"
+                                   [ YMLNewLine,
+                                     YMLMapping
+                                       "c"
+                                       [ YMLNewLine,
+                                         YMLMapping "d" [YMLWSSpace, YMLScalar $ ScalarRawString "123"],
+                                         YMLNewLine,
+                                         YMLMapping "e" [YMLWSSpace, YMLScalar $ ScalarRawString "456"],
+                                         YMLNewLine,
+                                         YMLMapping "f" [YMLWSSpace, YMLScalar $ ScalarRawString "789"],
+                                         YMLNewLine
+                                       ],
+                                     YMLNewLine,
+                                     YMLMapping
+                                       "coocoo"
+                                       [ YMLNewLine,
+                                         YMLMapping "e" [YMLWSSpace, YMLScalar $ ScalarRawString "999"],
+                                         YMLNewLine
+                                       ],
+                                     YMLNewLine
+                                   ],
+                                 YMLMapping "foo" [YMLWSSpace, YMLScalar $ ScalarRawString "bar"]
+                               ]
+                           ]
+                       ]
 
     describe "updateScalarAtPath" $ do
       let doc =
@@ -155,9 +191,9 @@ test = do
 
       context "when yaml doc contains a scalar value at path" $ do
         it "updates the value at that path" $ do
-          let (found, updated) = updateScalarAtPath ["a", "b"] (const $ ScalarSingleQuote "Fuck you") doc
-          found `shouldBe` True
-          updated
+          let (isUpdated, newDoc) = updateScalarAtPath ["a", "b"] (const $ ScalarSingleQuote "Fuck you") doc
+          isUpdated `shouldBe` True
+          newDoc
             `shouldBe` [ YMLNewLine,
                          YMLMapping "a" [YMLWSSpace, YMLMapping "b" [YMLWSSpace, YMLScalar $ ScalarSingleQuote "Fuck you"]],
                          YMLNewLine,
@@ -167,6 +203,25 @@ test = do
 
       context "when yaml doc contains a non-scalar value at path" $ do
         it "does not update anything" $ do
-          let (found, updated) = updateScalarAtPath ["a"] (const $ ScalarSingleQuote "Fuck you") doc
-          found `shouldBe` True
-          updated `shouldBe` doc
+          let (isUpdated, newDoc) = updateScalarAtPath ["a"] (const $ ScalarSingleQuote "Fuck you") doc
+          isUpdated `shouldBe` True
+          newDoc `shouldBe` doc
+
+      context "when path does not exist" $ do
+        it "inserts new path" $ do
+          let (isUpdated, newDoc) = updateScalarAtPath ["a", "c"] (const $ ScalarSingleQuote "Fuck you") doc
+          isUpdated `shouldBe` True
+          newDoc
+            `shouldBe` [ YMLNewLine,
+                         YMLMapping
+                           "a"
+                           [ YMLWSSpace,
+                             YMLMapping "b" [YMLWSSpace, YMLScalar $ ScalarRawString "hello world"],
+                             YMLNewLine,
+                             YMLMapping "c" [YMLWSSpace, YMLScalar $ ScalarSingleQuote "Fuck you"],
+                             YMLNewLine
+                           ],
+                         YMLNewLine,
+                         YMLNewLine,
+                         YMLMapping "c" [YMLWSSpace, YMLScalar $ ScalarRawString "3"]
+                       ]

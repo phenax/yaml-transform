@@ -9,6 +9,7 @@
   - (x) Fix nix build (test fails because cant load fixture)
   - ( ) Parser: *bug* Allow sequences to be at the same indentation level as parent
   - (x) Transform for scalar
+  - ( ) CLI: Arg parsing
   - ( ) CLI: Update path in yaml
   - ( ) CLI: Remove key
   - ( ) CLI: Get value
