@@ -9,10 +9,12 @@
   - (x) Fix nix build (test fails because cant load fixture)
   - ( ) Parser: *bug* Allow sequences to be at the same indentation level as parent
   - (x) Transform for scalar
-  - ( ) CLI: Arg parsing
-  - ( ) CLI: Update path in yaml
+  - (x) CLI: Arg parsing
+  - (x) CLI: Update path in yaml
   - ( ) CLI: Remove key
-  - ( ) CLI: Get value
+  - (x) CLI: Print value
+  - ( ) Transform: Preserve indent level for inserted keys
+  - ( ) Parser: Maintain indent level in YMLMapping
   - ( ) Unquoted string nuances (Problem chars `[]{}:>|` have to be quoted)
   - ( ) strings: Folded style `>`
   - ( ) strings: Literal style `\|`
