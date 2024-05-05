@@ -85,7 +85,7 @@ mappingP parentIndent prefixIndent = do
   whitespaces <- indentCheckP (parentIndent - prefixIndent) False
   let indent = length whitespaces + prefixIndent
   key <- identifierP <* P.char ':'
-  (whitespaces ++) . pure . YMLMapping key <$> valueP indent
+  (whitespaces ++) . pure . YMLMapping indent key <$> valueP indent
   where
     valueP indent = P.concatListP [optionalAnchorP, P.choice [objectValueP indent, inlineValueP]]
     objectValueP indent = P.concatListP [endOfLineIgnorableP, yamlP indent 0]

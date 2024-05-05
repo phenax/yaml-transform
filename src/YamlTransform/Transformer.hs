@@ -5,7 +5,7 @@ import YamlTransform.Types (YMLScalar (ScalarRawString), Yaml (..))
 
 getKey :: Text -> [Yaml] -> Maybe [Yaml]
 getKey _ [] = Nothing
-getKey key ((YMLMapping k values) : _)
+getKey key ((YMLMapping _ k values) : _)
   | k == key = Just values
 getKey key (_ : ymls) = getKey key ymls
 
@@ -15,10 +15,10 @@ getPath [key] ymls = getKey key ymls
 getPath (key : keys) ymls = getKey key ymls >>= getPath keys
 
 updateKey :: Text -> ([Yaml] -> [Yaml]) -> [Yaml] -> (Bool, [Yaml])
-updateKey key updater [] = (False, [YMLNewLine, YMLMapping key $ updater [], YMLNewLine])
-updateKey key updater [YMLNewLine] = (False, [YMLNewLine, YMLMapping key $ updater [], YMLNewLine])
-updateKey key updater ((YMLMapping k values) : ymls)
-  | k == key = (True, YMLMapping k (updater values) : ymls)
+updateKey key updater [] = (False, [YMLNewLine, YMLMapping 0 key $ updater [], YMLNewLine]) -- TODO: Fix indent
+updateKey key updater [YMLNewLine] = (False, [YMLNewLine, YMLMapping 0 key $ updater [], YMLNewLine])
+updateKey key updater ((YMLMapping indent k values) : ymls)
+  | k == key = (True, YMLMapping indent k (updater values) : ymls)
 updateKey key updater (yml : ymls) = (found, yml : updated)
   where
     (found, updated) = updateKey key updater ymls

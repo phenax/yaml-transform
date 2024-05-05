@@ -20,18 +20,20 @@ test = do
       it "allows valid keys" $ do
         let input =
               [ YMLMapping
+                  0
                   "a"
                   [ YMLNewLine,
                     YMLWSSpace,
                     YMLWSSpace,
                     YMLMapping
+                      0
                       "b"
                       [ YMLNewLine,
                         YMLWSSpace,
                         YMLWSSpace,
                         YMLWSSpace,
                         YMLWSSpace,
-                        YMLMapping "c" [YMLWSSpace, YMLScalar $ ScalarRawString "2"],
+                        YMLMapping 0 "c" [YMLWSSpace, YMLScalar $ ScalarRawString "2"],
                         YMLNewLine
                       ],
                     YMLWSSpace,
@@ -40,10 +42,10 @@ test = do
                     YMLNewLine,
                     YMLWSSpace,
                     YMLWSSpace,
-                    YMLMapping "d" [YMLWSSpace, YMLScalar $ ScalarRawString "5"],
+                    YMLMapping 0 "d" [YMLWSSpace, YMLScalar $ ScalarRawString "5"],
                     YMLNewLine
                   ],
-                YMLMapping "c" [YMLWSSpace, YMLScalar $ ScalarRawString "2"]
+                YMLMapping 0 "c" [YMLWSSpace, YMLScalar $ ScalarRawString "2"]
               ]
         serialize input
           `shouldBe` [text|
@@ -60,6 +62,7 @@ test = do
         it "serializes it correctly" $ do
           let input =
                 [ YMLMapping
+                    0
                     "mapping"
                     [ YMLWSSpace,
                       YMLInlineSequence
@@ -96,6 +99,7 @@ test = do
         it "serializes it correctly" $ do
           let input =
                 [ YMLMapping
+                    0
                     "mapping"
                     [ YMLWSSpace,
                       YMLAnchor "some-anchor",
@@ -112,6 +116,7 @@ test = do
         it "serializes it correctly" $ do
           let input =
                 [ YMLMapping
+                    0
                     "mapping"
                     [ YMLNewLine,
                       YMLWSSpace,
@@ -124,7 +129,7 @@ test = do
                           YMLWSSpace,
                           YMLWSSpace,
                           YMLWSSpace,
-                          YMLMapping "one" [YMLWSSpace, YMLScalar $ ScalarRawString "two"]
+                          YMLMapping 0 "one" [YMLWSSpace, YMLScalar $ ScalarRawString "two"]
                         ],
                       YMLNewLine,
                       YMLWSSpace,

@@ -1,24 +1,24 @@
 Right
-    [ YMLMapping "version"
+    [ YMLMapping 0 "version"
         [ YMLWSSpace
         , YMLScalar
             ( ScalarRawString "2.1" )
         ]
     , YMLNewLine
     , YMLNewLine
-    , YMLMapping "executors"
+    , YMLMapping 0 "executors"
         [ YMLWSSpace
         , YMLComment " Define an executor"
         , YMLNewLine
         , YMLWSSpace
         , YMLWSSpace
-        , YMLMapping "my-executor"
+        , YMLMapping 2 "my-executor"
             [ YMLNewLine
             , YMLWSSpace
             , YMLWSSpace
             , YMLWSSpace
             , YMLWSSpace
-            , YMLMapping "docker"
+            , YMLMapping 4 "docker"
                 [ YMLNewLine
                 , YMLWSSpace
                 , YMLWSSpace
@@ -28,7 +28,7 @@ Right
                 , YMLWSSpace
                 , YMLSequenceItem
                     [ YMLWSSpace
-                    , YMLMapping "image"
+                    , YMLMapping 7 "image"
                         [ YMLWSSpace
                         , YMLScalar
                             ( ScalarRawString "cimg/base:2024.01" )
@@ -40,17 +40,17 @@ Right
         ]
     , YMLComment " Define the jobs we want to run for this project"
     , YMLNewLine
-    , YMLMapping "jobs"
+    , YMLMapping 0 "jobs"
         [ YMLNewLine
         , YMLWSSpace
         , YMLWSSpace
-        , YMLMapping "build"
+        , YMLMapping 2 "build"
             [ YMLNewLine
             , YMLWSSpace
             , YMLWSSpace
             , YMLWSSpace
             , YMLWSSpace
-            , YMLMapping "executor"
+            , YMLMapping 4 "executor"
                 [ YMLWSSpace
                 , YMLScalar
                     ( ScalarRawString "my-executor" )
@@ -60,7 +60,7 @@ Right
             , YMLWSSpace
             , YMLWSSpace
             , YMLWSSpace
-            , YMLMapping "steps"
+            , YMLMapping 4 "steps"
                 [ YMLNewLine
                 , YMLWSSpace
                 , YMLWSSpace
@@ -82,7 +82,7 @@ Right
                 , YMLWSSpace
                 , YMLSequenceItem
                     [ YMLWSSpace
-                    , YMLMapping "run"
+                    , YMLMapping 7 "run"
                         [ YMLWSSpace
                         , YMLScalar
                             ( ScalarSingleQuote "echo "build"" )
@@ -93,13 +93,13 @@ Right
             ]
         , YMLWSSpace
         , YMLWSSpace
-        , YMLMapping "test"
+        , YMLMapping 2 "test"
             [ YMLNewLine
             , YMLWSSpace
             , YMLWSSpace
             , YMLWSSpace
             , YMLWSSpace
-            , YMLMapping "executor"
+            , YMLMapping 4 "executor"
                 [ YMLWSSpace
                 , YMLScalar
                     ( ScalarRawString "my-executor" )
@@ -109,7 +109,7 @@ Right
             , YMLWSSpace
             , YMLWSSpace
             , YMLWSSpace
-            , YMLMapping "steps"
+            , YMLMapping 4 "steps"
                 [ YMLNewLine
                 , YMLWSSpace
                 , YMLWSSpace
@@ -133,7 +133,7 @@ Right
                 , YMLWSSpace
                 , YMLSequenceItem
                     [ YMLWSSpace
-                    , YMLMapping "run"
+                    , YMLMapping 7 "run"
                         [ YMLWSSpace
                         , YMLScalar
                             ( ScalarRawString "echo "test"" )
@@ -146,13 +146,13 @@ Right
             ]
         , YMLWSSpace
         , YMLWSSpace
-        , YMLMapping "deploy"
+        , YMLMapping 2 "deploy"
             [ YMLNewLine
             , YMLWSSpace
             , YMLWSSpace
             , YMLWSSpace
             , YMLWSSpace
-            , YMLMapping "executor"
+            , YMLMapping 4 "executor"
                 [ YMLWSSpace
                 , YMLScalar
                     ( ScalarRawString "my-executor" )
@@ -162,7 +162,7 @@ Right
             , YMLWSSpace
             , YMLWSSpace
             , YMLWSSpace
-            , YMLMapping "steps"
+            , YMLMapping 4 "steps"
                 [ YMLNewLine
                 , YMLWSSpace
                 , YMLWSSpace
@@ -192,7 +192,7 @@ Right
                 , YMLWSSpace
                 , YMLSequenceItem
                     [ YMLWSSpace
-                    , YMLMapping "run"
+                    , YMLMapping 7 "run"
                         [ YMLWSSpace
                         , YMLScalar
                             ( ScalarRawString "echo "deploy"" )
@@ -213,17 +213,17 @@ Right
         ]
     , YMLComment " Orchestrate our job run sequence"
     , YMLNewLine
-    , YMLMapping "workflows"
+    , YMLMapping 0 "workflows"
         [ YMLNewLine
         , YMLWSSpace
         , YMLWSSpace
-        , YMLMapping "build_and_test"
+        , YMLMapping 2 "build_and_test"
             [ YMLNewLine
             , YMLWSSpace
             , YMLWSSpace
             , YMLWSSpace
             , YMLWSSpace
-            , YMLMapping "jobs"
+            , YMLMapping 4 "jobs"
                 [ YMLNewLine
                 , YMLWSSpace
                 , YMLWSSpace
@@ -245,7 +245,7 @@ Right
                 , YMLWSSpace
                 , YMLSequenceItem
                     [ YMLWSSpace
-                    , YMLMapping "test"
+                    , YMLMapping 7 "test"
                         [ YMLNewLine
                         , YMLWSSpace
                         , YMLWSSpace
@@ -257,7 +257,7 @@ Right
                         , YMLWSSpace
                         , YMLWSSpace
                         , YMLWSSpace
-                        , YMLMapping "requires"
+                        , YMLMapping 10 "requires"
                             [ YMLWSSpace
                             , YMLInlineSequence
                                 [
@@ -277,7 +277,7 @@ Right
                 , YMLWSSpace
                 , YMLSequenceItem
                     [ YMLWSSpace
-                    , YMLMapping "hold"
+                    , YMLMapping 7 "hold"
                         [ YMLNewLine
                         , YMLWSSpace
                         , YMLWSSpace
@@ -289,7 +289,7 @@ Right
                         , YMLWSSpace
                         , YMLWSSpace
                         , YMLWSSpace
-                        , YMLMapping "type"
+                        , YMLMapping 10 "type"
                             [ YMLWSSpace
                             , YMLScalar
                                 ( ScalarRawString "approval" )
@@ -305,7 +305,7 @@ Right
                         , YMLWSSpace
                         , YMLWSSpace
                         , YMLWSSpace
-                        , YMLMapping "requires"
+                        , YMLMapping 10 "requires"
                             [ YMLNewLine
                             , YMLWSSpace
                             , YMLWSSpace
@@ -336,7 +336,7 @@ Right
                 , YMLWSSpace
                 , YMLSequenceItem
                     [ YMLWSSpace
-                    , YMLMapping "deploy"
+                    , YMLMapping 7 "deploy"
                         [ YMLNewLine
                         , YMLWSSpace
                         , YMLWSSpace
@@ -348,7 +348,7 @@ Right
                         , YMLWSSpace
                         , YMLWSSpace
                         , YMLWSSpace
-                        , YMLMapping "requires"
+                        , YMLMapping 10 "requires"
                             [ YMLNewLine
                             , YMLWSSpace
                             , YMLWSSpace

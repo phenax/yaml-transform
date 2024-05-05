@@ -9,7 +9,7 @@ data YMLScalar
   deriving (Show, Eq)
 
 data Yaml
-  = YMLMapping Text [Yaml]
+  = YMLMapping Int Text [Yaml]
   | YMLSequenceItem [Yaml]
   | YMLScalar YMLScalar
   | YMLInlineSequence [[Yaml]]

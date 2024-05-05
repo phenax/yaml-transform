@@ -17,11 +17,11 @@ test = do
   describe "YamlTransform.Transformer" $ do
     describe "updateKey" $ do
       let doc =
-            [ YMLMapping "a" [YMLWSSpace, YMLScalar $ ScalarRawString "1"],
+            [ YMLMapping 0 "a" [YMLWSSpace, YMLScalar $ ScalarRawString "1"],
               YMLNewLine,
-              YMLMapping "b" [YMLWSSpace, YMLScalar $ ScalarRawString "2"],
+              YMLMapping 0 "b" [YMLWSSpace, YMLScalar $ ScalarRawString "2"],
               YMLNewLine,
-              YMLMapping "c" [YMLWSSpace, YMLScalar $ ScalarRawString "3"]
+              YMLMapping 0 "c" [YMLWSSpace, YMLScalar $ ScalarRawString "3"]
             ]
 
       context "when yaml doc contains the key" $ do
@@ -29,11 +29,11 @@ test = do
           let (isUpdated, newDoc) = updateKey "b" (const [YMLWSSpace, YMLScalar $ ScalarRawString "99"]) doc
           isUpdated `shouldBe` True
           newDoc
-            `shouldBe` [ YMLMapping "a" [YMLWSSpace, YMLScalar $ ScalarRawString "1"],
+            `shouldBe` [ YMLMapping 0 "a" [YMLWSSpace, YMLScalar $ ScalarRawString "1"],
                          YMLNewLine,
-                         YMLMapping "b" [YMLWSSpace, YMLScalar $ ScalarRawString "99"],
+                         YMLMapping 0 "b" [YMLWSSpace, YMLScalar $ ScalarRawString "99"],
                          YMLNewLine,
-                         YMLMapping "c" [YMLWSSpace, YMLScalar $ ScalarRawString "3"]
+                         YMLMapping 0 "c" [YMLWSSpace, YMLScalar $ ScalarRawString "3"]
                        ]
 
       context "when yaml doc does not contains the key" $ do
@@ -41,39 +41,43 @@ test = do
           let (isUpdated, newDoc) = updateKey "z" (const [YMLWSSpace, YMLScalar $ ScalarRawString "99"]) doc
           isUpdated `shouldBe` False
           newDoc
-            `shouldBe` [ YMLMapping "a" [YMLWSSpace, YMLScalar $ ScalarRawString "1"],
+            `shouldBe` [ YMLMapping 0 "a" [YMLWSSpace, YMLScalar $ ScalarRawString "1"],
                          YMLNewLine,
-                         YMLMapping "b" [YMLWSSpace, YMLScalar $ ScalarRawString "2"],
+                         YMLMapping 0 "b" [YMLWSSpace, YMLScalar $ ScalarRawString "2"],
                          YMLNewLine,
-                         YMLMapping "c" [YMLWSSpace, YMLScalar $ ScalarRawString "3"],
+                         YMLMapping 0 "c" [YMLWSSpace, YMLScalar $ ScalarRawString "3"],
                          YMLNewLine,
-                         YMLMapping "z" [YMLWSSpace, YMLScalar $ ScalarRawString "99"],
+                         YMLMapping 0 "z" [YMLWSSpace, YMLScalar $ ScalarRawString "99"],
                          YMLNewLine
                        ]
 
     describe "updatePath" $ do
       let doc =
             [ YMLMapping
+                0
                 "root"
                 [ YMLNewLine,
                   YMLMapping
+                    0
                     "a"
                     [ YMLNewLine,
                       YMLMapping
+                        0
                         "b"
                         [ YMLNewLine,
                           YMLMapping
+                            0
                             "c"
                             [ YMLNewLine,
-                              YMLMapping "d" [YMLWSSpace, YMLScalar $ ScalarRawString "123"],
+                              YMLMapping 0 "d" [YMLWSSpace, YMLScalar $ ScalarRawString "123"],
                               YMLNewLine,
-                              YMLMapping "e" [YMLWSSpace, YMLScalar $ ScalarRawString "456"],
+                              YMLMapping 0 "e" [YMLWSSpace, YMLScalar $ ScalarRawString "456"],
                               YMLNewLine,
-                              YMLMapping "f" [YMLWSSpace, YMLScalar $ ScalarRawString "789"],
+                              YMLMapping 0 "f" [YMLWSSpace, YMLScalar $ ScalarRawString "789"],
                               YMLNewLine
                             ]
                         ],
-                      YMLMapping "foo" [YMLWSSpace, YMLScalar $ ScalarRawString "bar"]
+                      YMLMapping 0 "foo" [YMLWSSpace, YMLScalar $ ScalarRawString "bar"]
                     ]
                 ]
             ]
@@ -85,26 +89,30 @@ test = do
           isUpdated `shouldBe` True
           newDoc
             `shouldBe` [ YMLMapping
+                           0
                            "root"
                            [ YMLNewLine,
                              YMLMapping
+                               0
                                "a"
                                [ YMLNewLine,
                                  YMLMapping
+                                   0
                                    "b"
                                    [ YMLNewLine,
                                      YMLMapping
+                                       0
                                        "c"
                                        [ YMLNewLine,
-                                         YMLMapping "d" [YMLWSSpace, YMLScalar $ ScalarRawString "123"],
+                                         YMLMapping 0 "d" [YMLWSSpace, YMLScalar $ ScalarRawString "123"],
                                          YMLNewLine,
-                                         YMLMapping "e" [YMLWSSpace, YMLScalar $ ScalarRawString "999"],
+                                         YMLMapping 0 "e" [YMLWSSpace, YMLScalar $ ScalarRawString "999"],
                                          YMLNewLine,
-                                         YMLMapping "f" [YMLWSSpace, YMLScalar $ ScalarRawString "789"],
+                                         YMLMapping 0 "f" [YMLWSSpace, YMLScalar $ ScalarRawString "789"],
                                          YMLNewLine
                                        ]
                                    ],
-                                 YMLMapping "foo" [YMLWSSpace, YMLScalar $ ScalarRawString "bar"]
+                                 YMLMapping 0 "foo" [YMLWSSpace, YMLScalar $ ScalarRawString "bar"]
                                ]
                            ]
                        ]
@@ -116,28 +124,32 @@ test = do
           isUpdated `shouldBe` True
           newDoc
             `shouldBe` [ YMLMapping
+                           0
                            "root"
                            [ YMLNewLine,
                              YMLMapping
+                               0
                                "a"
                                [ YMLNewLine,
                                  YMLMapping
+                                   0
                                    "b"
                                    [ YMLNewLine,
                                      YMLMapping
+                                       0
                                        "c"
                                        [ YMLNewLine,
-                                         YMLMapping "d" [YMLWSSpace, YMLScalar $ ScalarRawString "123"],
+                                         YMLMapping 0 "d" [YMLWSSpace, YMLScalar $ ScalarRawString "123"],
                                          YMLNewLine,
-                                         YMLMapping "e" [YMLWSSpace, YMLScalar $ ScalarRawString "456"],
+                                         YMLMapping 0 "e" [YMLWSSpace, YMLScalar $ ScalarRawString "456"],
                                          YMLNewLine,
-                                         YMLMapping "f" [YMLWSSpace, YMLScalar $ ScalarRawString "789"],
+                                         YMLMapping 0 "f" [YMLWSSpace, YMLScalar $ ScalarRawString "789"],
                                          YMLNewLine,
-                                         YMLMapping "coocoo" [YMLWSSpace, YMLScalar $ ScalarRawString "999"],
+                                         YMLMapping 0 "coocoo" [YMLWSSpace, YMLScalar $ ScalarRawString "999"],
                                          YMLNewLine
                                        ]
                                    ],
-                                 YMLMapping "foo" [YMLWSSpace, YMLScalar $ ScalarRawString "bar"]
+                                 YMLMapping 0 "foo" [YMLWSSpace, YMLScalar $ ScalarRawString "bar"]
                                ]
                            ]
                        ]
@@ -148,34 +160,39 @@ test = do
           isUpdated `shouldBe` True
           newDoc
             `shouldBe` [ YMLMapping
+                           0
                            "root"
                            [ YMLNewLine,
                              YMLMapping
+                               0
                                "a"
                                [ YMLNewLine,
                                  YMLMapping
+                                   0
                                    "b"
                                    [ YMLNewLine,
                                      YMLMapping
+                                       0
                                        "c"
                                        [ YMLNewLine,
-                                         YMLMapping "d" [YMLWSSpace, YMLScalar $ ScalarRawString "123"],
+                                         YMLMapping 0 "d" [YMLWSSpace, YMLScalar $ ScalarRawString "123"],
                                          YMLNewLine,
-                                         YMLMapping "e" [YMLWSSpace, YMLScalar $ ScalarRawString "456"],
+                                         YMLMapping 0 "e" [YMLWSSpace, YMLScalar $ ScalarRawString "456"],
                                          YMLNewLine,
-                                         YMLMapping "f" [YMLWSSpace, YMLScalar $ ScalarRawString "789"],
+                                         YMLMapping 0 "f" [YMLWSSpace, YMLScalar $ ScalarRawString "789"],
                                          YMLNewLine
                                        ],
                                      YMLNewLine,
                                      YMLMapping
+                                       0
                                        "coocoo"
                                        [ YMLNewLine,
-                                         YMLMapping "e" [YMLWSSpace, YMLScalar $ ScalarRawString "999"],
+                                         YMLMapping 0 "e" [YMLWSSpace, YMLScalar $ ScalarRawString "999"],
                                          YMLNewLine
                                        ],
                                      YMLNewLine
                                    ],
-                                 YMLMapping "foo" [YMLWSSpace, YMLScalar $ ScalarRawString "bar"]
+                                 YMLMapping 0 "foo" [YMLWSSpace, YMLScalar $ ScalarRawString "bar"]
                                ]
                            ]
                        ]
@@ -183,10 +200,10 @@ test = do
     describe "updateScalarAtPath" $ do
       let doc =
             [ YMLNewLine,
-              YMLMapping "a" [YMLWSSpace, YMLMapping "b" [YMLWSSpace, YMLScalar $ ScalarRawString "hello world"]],
+              YMLMapping 0 "a" [YMLWSSpace, YMLMapping 0 "b" [YMLWSSpace, YMLScalar $ ScalarRawString "hello world"]],
               YMLNewLine,
               YMLNewLine,
-              YMLMapping "c" [YMLWSSpace, YMLScalar $ ScalarRawString "3"]
+              YMLMapping 0 "c" [YMLWSSpace, YMLScalar $ ScalarRawString "3"]
             ]
 
       context "when yaml doc contains a scalar value at path" $ do
@@ -195,10 +212,10 @@ test = do
           isUpdated `shouldBe` True
           newDoc
             `shouldBe` [ YMLNewLine,
-                         YMLMapping "a" [YMLWSSpace, YMLMapping "b" [YMLWSSpace, YMLScalar $ ScalarSingleQuote "Fuck you"]],
+                         YMLMapping 0 "a" [YMLWSSpace, YMLMapping 0 "b" [YMLWSSpace, YMLScalar $ ScalarSingleQuote "Fuck you"]],
                          YMLNewLine,
                          YMLNewLine,
-                         YMLMapping "c" [YMLWSSpace, YMLScalar $ ScalarRawString "3"]
+                         YMLMapping 0 "c" [YMLWSSpace, YMLScalar $ ScalarRawString "3"]
                        ]
 
       context "when yaml doc contains a non-scalar value at path" $ do
@@ -214,14 +231,15 @@ test = do
           newDoc
             `shouldBe` [ YMLNewLine,
                          YMLMapping
+                           0
                            "a"
                            [ YMLWSSpace,
-                             YMLMapping "b" [YMLWSSpace, YMLScalar $ ScalarRawString "hello world"],
+                             YMLMapping 0 "b" [YMLWSSpace, YMLScalar $ ScalarRawString "hello world"],
                              YMLNewLine,
-                             YMLMapping "c" [YMLWSSpace, YMLScalar $ ScalarSingleQuote "Fuck you"],
+                             YMLMapping 0 "c" [YMLWSSpace, YMLScalar $ ScalarSingleQuote "Fuck you"],
                              YMLNewLine
                            ],
                          YMLNewLine,
                          YMLNewLine,
-                         YMLMapping "c" [YMLWSSpace, YMLScalar $ ScalarRawString "3"]
+                         YMLMapping 0 "c" [YMLWSSpace, YMLScalar $ ScalarRawString "3"]
                        ]
