@@ -26,7 +26,7 @@ Right
                 , YMLWSSpace
                 , YMLWSSpace
                 , YMLWSSpace
-                , YMLSequenceItem
+                , YMLSequenceItem 6
                     [ YMLWSSpace
                     , YMLMapping 7 "image"
                         [ YMLWSSpace
@@ -68,7 +68,7 @@ Right
                 , YMLWSSpace
                 , YMLWSSpace
                 , YMLWSSpace
-                , YMLSequenceItem
+                , YMLSequenceItem 6
                     [ YMLWSSpace
                     , YMLScalar
                         ( ScalarRawString "checkout" )
@@ -80,7 +80,7 @@ Right
                 , YMLWSSpace
                 , YMLWSSpace
                 , YMLWSSpace
-                , YMLSequenceItem
+                , YMLSequenceItem 6
                     [ YMLWSSpace
                     , YMLMapping 7 "run"
                         [ YMLWSSpace
@@ -117,7 +117,7 @@ Right
                 , YMLWSSpace
                 , YMLWSSpace
                 , YMLWSSpace
-                , YMLSequenceItem
+                , YMLSequenceItem 6
                     [ YMLWSSpace
                     , YMLScalar
                         ( ScalarRawString "checkout" )
@@ -131,7 +131,7 @@ Right
                 , YMLWSSpace
                 , YMLWSSpace
                 , YMLWSSpace
-                , YMLSequenceItem
+                , YMLSequenceItem 6
                     [ YMLWSSpace
                     , YMLMapping 7 "run"
                         [ YMLWSSpace
@@ -170,7 +170,7 @@ Right
                 , YMLWSSpace
                 , YMLWSSpace
                 , YMLWSSpace
-                , YMLSequenceItem
+                , YMLSequenceItem 6
                     [ YMLWSSpace
                     , YMLScalar
                         ( ScalarRawString "checkout" )
@@ -190,7 +190,7 @@ Right
                 , YMLWSSpace
                 , YMLWSSpace
                 , YMLWSSpace
-                , YMLSequenceItem
+                , YMLSequenceItem 6
                     [ YMLWSSpace
                     , YMLMapping 7 "run"
                         [ YMLWSSpace
@@ -231,7 +231,7 @@ Right
                 , YMLWSSpace
                 , YMLWSSpace
                 , YMLWSSpace
-                , YMLSequenceItem
+                , YMLSequenceItem 6
                     [ YMLWSSpace
                     , YMLScalar
                         ( ScalarRawString "build" )
@@ -243,7 +243,7 @@ Right
                 , YMLWSSpace
                 , YMLWSSpace
                 , YMLWSSpace
-                , YMLSequenceItem
+                , YMLSequenceItem 6
                     [ YMLWSSpace
                     , YMLMapping 7 "test"
                         [ YMLNewLine
@@ -275,7 +275,7 @@ Right
                 , YMLWSSpace
                 , YMLWSSpace
                 , YMLWSSpace
-                , YMLSequenceItem
+                , YMLSequenceItem 6
                     [ YMLWSSpace
                     , YMLMapping 7 "hold"
                         [ YMLNewLine
@@ -319,7 +319,7 @@ Right
                             , YMLWSSpace
                             , YMLWSSpace
                             , YMLWSSpace
-                            , YMLSequenceItem
+                            , YMLSequenceItem 12
                                 [ YMLWSSpace
                                 , YMLScalar
                                     ( ScalarRawString "build" )
@@ -334,7 +334,7 @@ Right
                 , YMLWSSpace
                 , YMLWSSpace
                 , YMLWSSpace
-                , YMLSequenceItem
+                , YMLSequenceItem 6
                     [ YMLWSSpace
                     , YMLMapping 7 "deploy"
                         [ YMLNewLine
@@ -362,7 +362,7 @@ Right
                             , YMLWSSpace
                             , YMLWSSpace
                             , YMLWSSpace
-                            , YMLSequenceItem
+                            , YMLSequenceItem 12
                                 [ YMLWSSpace
                                 , YMLScalar
                                     ( ScalarRawString "hold" )

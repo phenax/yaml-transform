@@ -10,7 +10,7 @@ data YMLScalar
 
 data Yaml
   = YMLMapping Int Text [Yaml]
-  | YMLSequenceItem [Yaml]
+  | YMLSequenceItem Int [Yaml]
   | YMLScalar YMLScalar
   | YMLInlineSequence [[Yaml]]
   | YMLComment Text

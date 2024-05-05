@@ -97,7 +97,7 @@ sequenceItemP parentIndent = do
   whitespaces <- indentCheckP parentIndent False
   let indent = length whitespaces
   values <- P.char '-' *> P.concatListP [optionalAnchorP, P.choice [yamlP indent indent, inlineValueP]]
-  pure $ whitespaces ++ [YMLSequenceItem values]
+  pure $ whitespaces ++ [YMLSequenceItem indent values]
   where
     inlineValueP = P.concatListP [P.many1 whitespaceP, inlineYmlValueP, inlineEndP]
     inlineEndP = fromMaybe [] <$> optional (P.lookAhead whitespaceP *> endOfLineIgnorableP)

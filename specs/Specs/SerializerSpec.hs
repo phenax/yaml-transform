@@ -122,6 +122,7 @@ test = do
                       YMLWSSpace,
                       YMLWSSpace,
                       YMLSequenceItem
+                        0
                         [ YMLWSSpace,
                           YMLAnchor "some-anchor",
                           YMLNewLine,
@@ -134,7 +135,7 @@ test = do
                       YMLNewLine,
                       YMLWSSpace,
                       YMLWSSpace,
-                      YMLSequenceItem [YMLWSSpace, YMLAnchor "another", YMLWSSpace, YMLScalar $ ScalarRawString "More"]
+                      YMLSequenceItem 0 [YMLWSSpace, YMLAnchor "another", YMLWSSpace, YMLScalar $ ScalarRawString "More"]
                     ]
                 ]
           serialize input

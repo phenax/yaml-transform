@@ -401,11 +401,11 @@ test = do
             |]
           parse input
             `shouldBe` Right
-              [ YMLSequenceItem [YMLWSSpace, YMLScalar $ ScalarRawString "hello"],
+              [ YMLSequenceItem 0 [YMLWSSpace, YMLScalar $ ScalarRawString "hello"],
                 YMLNewLine,
-                YMLSequenceItem [YMLWSSpace, YMLScalar $ ScalarRawString "world"],
+                YMLSequenceItem 0 [YMLWSSpace, YMLScalar $ ScalarRawString "world"],
                 YMLNewLine,
-                YMLSequenceItem [YMLWSSpace, YMLScalar $ ScalarRawString "123"]
+                YMLSequenceItem 0 [YMLWSSpace, YMLScalar $ ScalarRawString "123"]
               ]
 
       context "when sequence contains a mapping" $ do
@@ -419,6 +419,7 @@ test = do
           parse input
             `shouldBe` Right
               [ YMLSequenceItem
+                  0
                   [ YMLWSSpace,
                     YMLMapping 1 "hello" [YMLWSSpace, YMLScalar $ ScalarRawString "world"],
                     YMLNewLine,
@@ -427,7 +428,7 @@ test = do
                     YMLMapping 2 "foo" [YMLWSSpace, YMLScalar $ ScalarRawString "bar"],
                     YMLNewLine
                   ],
-                YMLSequenceItem [YMLWSSpace, YMLScalar $ ScalarRawString "123"]
+                YMLSequenceItem 0 [YMLWSSpace, YMLScalar $ ScalarRawString "123"]
               ]
 
       context "when mapping contains a sequence" $ do
@@ -448,18 +449,19 @@ test = do
                   [ YMLNewLine,
                     YMLWSSpace,
                     YMLWSSpace,
-                    YMLSequenceItem [YMLWSSpace, YMLScalar $ ScalarRawString "salad"],
+                    YMLSequenceItem 2 [YMLWSSpace, YMLScalar $ ScalarRawString "salad"],
                     YMLNewLine,
                     YMLWSSpace,
                     YMLWSSpace,
                     YMLSequenceItem
+                      2
                       [ YMLWSSpace,
                         YMLMapping 3 "this" [YMLWSSpace, YMLScalar $ ScalarRawString "that"],
                         YMLNewLine
                       ],
                     YMLWSSpace,
                     YMLWSSpace,
-                    YMLSequenceItem [YMLWSSpace, YMLScalar $ ScalarRawString "fries"],
+                    YMLSequenceItem 2 [YMLWSSpace, YMLScalar $ ScalarRawString "fries"],
                     YMLNewLine
                   ],
                 YMLMapping 0 "foo" [YMLWSSpace, YMLScalar $ ScalarRawString "bar"]
@@ -477,9 +479,10 @@ test = do
                 |]
           parse input
             `shouldBe` Right
-              [ YMLSequenceItem [YMLWSSpace, YMLScalar $ ScalarRawString "hello"],
+              [ YMLSequenceItem 0 [YMLWSSpace, YMLScalar $ ScalarRawString "hello"],
                 YMLNewLine,
                 YMLSequenceItem
+                  0
                   [ YMLNewLine,
                     YMLWSSpace,
                     YMLWSSpace,
@@ -490,7 +493,7 @@ test = do
                     YMLMapping 2 "key2" [YMLWSSpace, YMLScalar $ ScalarRawString "v2"],
                     YMLNewLine
                   ],
-                YMLSequenceItem [YMLWSSpace, YMLScalar $ ScalarRawString "123"]
+                YMLSequenceItem 0 [YMLWSSpace, YMLScalar $ ScalarRawString "123"]
               ]
 
     describe "with inline sequence" $ do
@@ -515,6 +518,7 @@ test = do
           parse "- ['hello', 'wo,rld', 123]"
             `shouldBe` Right
               [ YMLSequenceItem
+                  0
                   [ YMLWSSpace,
                     YMLInlineSequence
                       [ [YMLScalar $ ScalarSingleQuote "hello"],
@@ -646,6 +650,7 @@ test = do
           parse "- &my-anchor This is some text that follows"
             `shouldBe` Right
               [ YMLSequenceItem
+                  0
                   [ YMLWSSpace,
                     YMLAnchor "my-anchor",
                     YMLWSSpace,
@@ -672,6 +677,7 @@ test = do
                     YMLWSSpace,
                     YMLWSSpace,
                     YMLSequenceItem
+                      2
                       [ YMLWSSpace,
                         YMLAnchor "anchor-1",
                         YMLWSSpace,
@@ -681,6 +687,7 @@ test = do
                     YMLWSSpace,
                     YMLWSSpace,
                     YMLSequenceItem
+                      2
                       [ YMLWSSpace,
                         YMLAnchor "anchor-2",
                         YMLNewLine,
@@ -694,6 +701,7 @@ test = do
                     YMLWSSpace,
                     YMLWSSpace,
                     YMLSequenceItem
+                      2
                       [ YMLWSSpace,
                         YMLScalar $ ScalarRawString "world"
                       ]
